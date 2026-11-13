@@ -1,18 +1,29 @@
 import { useMemo, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import ProductSection from "../components/ProductSection";
+import { matchesCategory } from "../data";
 
 export default function ShopPage({
   products,
   cartQuantities,
   wishlistIds,
   onAdd,
+  onChangeQuantity,
   onToggleWishlist
 }) {
   const [sortOrder, setSortOrder] = useState("featured");
   const [priceRange, setPriceRange] = useState("all");
+  const [searchParams] = useSearchParams();
+  const categoryFilter = searchParams.get("category") || "";
+  const tagFilter = searchParams.get("tag") || "";
 
   const visibleProducts = useMemo(() => {
     const filtered = products.filter((product) => {
+      if (!matchesCategory(product, categoryFilter)) return false;
+      if (
+        tagFilter &&
+        !product.tags?.some((tag) => tag.toLowerCase() === tagFilter.toLowerCase())
+      ) return false;
       if (priceRange === "under-50") return product.price < 50;
       if (priceRange === "50-100") return product.price >= 50 && product.price < 100;
       if (priceRange === "100-250") return product.price >= 100 && product.price < 250;
@@ -30,7 +41,7 @@ export default function ShopPage({
       return [...filtered].sort((a, b) => a.name.localeCompare(b.name));
     }
     return filtered;
-  }, [priceRange, products, sortOrder]);
+  }, [categoryFilter, priceRange, products, sortOrder, tagFilter]);
 
   return (
     <main className="container-wide pb-24 pt-8 sm:pt-8">
@@ -49,7 +60,14 @@ export default function ShopPage({
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3 rounded-xl border border-slate-200 bg-white p-4">
         <p className="text-sm text-slate-600" aria-live="polite">
           Showing <span className="font-semibold text-slate-900">{visibleProducts.length}</span> products
+          {categoryFilter && <span> in {categoryFilter}</span>}
+          {tagFilter && <span> tagged {tagFilter}</span>}
         </p>
+        {(categoryFilter || tagFilter) && (
+          <Link to="/shop" className="text-xs font-semibold text-blue-700 hover:underline">
+            Clear collection filter
+          </Link>
+        )}
         <div className="flex flex-wrap gap-3">
           <label className="grid gap-1 text-xs font-semibold text-slate-600">
             Price
@@ -87,6 +105,7 @@ export default function ShopPage({
         cartQuantities={cartQuantities}
         wishlistIds={wishlistIds}
         onAdd={onAdd}
+        onChangeQuantity={onChangeQuantity}
         onToggleWishlist={onToggleWishlist}
         columns={5}
       />

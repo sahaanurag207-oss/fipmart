@@ -32,7 +32,7 @@ function TopSelling() {
           Trending now: must-have styles for every occasion.
         </p>
 
-        <Link to="/shop" className="mt-6 inline-flex items-center gap-2 bg-slate-900 px-5 py-3 text-xs font-bold text-white hover:bg-blue-700">
+        <Link to="/shop?tag=featured" className="mt-6 inline-flex items-center gap-2 bg-slate-900 px-5 py-3 text-xs font-bold text-white hover:bg-blue-700">
           EXPLORE COLLECTION
           <ArrowRight size={15} />
         </Link>

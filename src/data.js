@@ -51,7 +51,8 @@ export const premiumProducts = [
     oldPrice: null,
     image: "/images/photo-1612815154858-60aa4c59eaa6.webp",
     categories: ["Electronics"],
-    tag: "Office"
+    tag: "Office",
+    tags: ["featured"]
   },
   {
     id: 2,
@@ -60,7 +61,8 @@ export const premiumProducts = [
     oldPrice: 155,
     image: "/images/photo-1516035069371-29a1b244cc32.webp",
     categories: ["Cameras", "Electronics"],
-    tag: "Photography"
+    tag: "Photography",
+    tags: ["featured"]
   },
   {
     id: 3,
@@ -69,7 +71,8 @@ export const premiumProducts = [
     oldPrice: null,
     image: "/images/photo-1593359677879-a4bb92f829d1.webp",
     categories: ["Electronics"],
-    tag: "Electronics"
+    tag: "Electronics",
+    tags: ["featured"]
   },
   {
     id: 4,
@@ -78,7 +81,8 @@ export const premiumProducts = [
     oldPrice: 65,
     image: "/images/photo-1507473885765-e6ed057f782c.webp",
     categories: ["Accessories"],
-    tag: "Home"
+    tag: "Home",
+    tags: ["featured"]
   },
   {
     id: 5,
@@ -87,7 +91,8 @@ export const premiumProducts = [
     oldPrice: 109,
     image: "/images/photo-1592840496694-26d035b52b48.webp",
     categories: ["Accessories", "Electronics"],
-    tag: "Gaming"
+    tag: "Gaming",
+    tags: ["featured"]
   }
 ];
 
@@ -98,7 +103,8 @@ export const womenProducts = [
     price: 80,
     oldPrice: 100,
     image: "/images/photo-1539109136881-3be0616acf4b.webp",
-    categories: ["Clothing"]
+    categories: ["Clothing"],
+    tags: ["women"]
   },
   {
     id: 7,
@@ -106,7 +112,8 @@ export const womenProducts = [
     price: 142,
     oldPrice: 160,
     image: "/images/photo-1566174053879-31528523f8ae.webp",
-    categories: ["Clothing"]
+    categories: ["Clothing"],
+    tags: ["women"]
   },
   {
     id: 8,
@@ -114,7 +121,8 @@ export const womenProducts = [
     price: 300,
     oldPrice: null,
     image: "/images/photo-1595777457583-95e059d581b8.webp",
-    categories: ["Clothing"]
+    categories: ["Clothing"],
+    tags: ["women"]
   },
   {
     id: 9,
@@ -122,7 +130,8 @@ export const womenProducts = [
     price: 89,
     oldPrice: null,
     image: "/images/photo-1596783074918-c84cb06531ca.webp",
-    categories: ["Clothing"]
+    categories: ["Clothing"],
+    tags: ["women"]
   },
   {
     id: 10,
@@ -130,7 +139,8 @@ export const womenProducts = [
     price: 119,
     oldPrice: null,
     image: "/images/photo-1496747611176-843222e1e57c.webp",
-    categories: ["Clothing"]
+    categories: ["Clothing"],
+    tags: ["women"]
   },
   {
     id: 11,
@@ -138,7 +148,8 @@ export const womenProducts = [
     price: 122,
     oldPrice: null,
     image: "/images/photo-1483985988355-763728e1935b.webp",
-    categories: ["Clothing"]
+    categories: ["Clothing"],
+    tags: ["women"]
   }
 ];
 
@@ -148,21 +159,26 @@ export const menProducts = [
     name: "Classic White T-shirt",
     price: 35,
     image: "/images/photo-1521572163474-6864f9cf17ab.webp",
-    categories: ["Clothing"]
+    categories: ["Clothing"],
+    tags: ["men"]
   },
   {
     id: 13,
     name: "Formal Navy Suit",
     price: 180,
     image: "/images/photo-1591047139829-d91aecb6caea.webp",
-    categories: ["Clothing"]
+    categories: ["Clothing"],
+    tags: ["men"]
   }
 ];
 
 export function matchesCategory(product, category) {
-  if (!category) return true;
-  if (category === "Best Deals") {
+  if (!category?.trim()) return true;
+  const normalizedCategory = category.trim().toLowerCase();
+  if (normalizedCategory === "best deals") {
     return product.oldPrice !== null && product.oldPrice > product.price;
   }
-  return product.categories?.includes(category) ?? false;
+  return product.categories?.some(
+    (productCategory) => productCategory.toLowerCase() === normalizedCategory
+  ) ?? false;
 }

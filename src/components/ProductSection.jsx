@@ -1,5 +1,5 @@
 import { lazy, memo, Suspense, useCallback, useState } from "react";
-import { Check, Heart, ShoppingCart } from "lucide-react";
+import { Heart, Minus, Plus, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { MAX_CART_QUANTITY } from "../data";
 
@@ -10,9 +10,11 @@ const ProductCard = memo(function ProductCard({
   quantity,
   wishlisted,
   onAdd,
+  onChangeQuantity,
   onToggleWishlist
 }) {
   const [quickViewOpen, setQuickViewOpen] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const maxQuantityReached = quantity >= MAX_CART_QUANTITY;
   const closeQuickView = useCallback(() => setQuickViewOpen(false), []);
 
@@ -37,7 +39,10 @@ const ProductCard = memo(function ProductCard({
         aria-label={`Quick view ${product.name}`}
         className="block w-full cursor-pointer rounded text-center text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
       >
-        <div className="aspect-4/3 w-full overflow-hidden bg-slate-100">
+        <div className="relative aspect-4/3 w-full overflow-hidden bg-slate-100">
+          {!imageLoaded && (
+            <div aria-hidden="true" className="absolute inset-0 animate-pulse bg-slate-200" />
+          )}
           <img
             src={product.image}
             alt=""
@@ -45,7 +50,10 @@ const ProductCard = memo(function ProductCard({
             height="300"
             loading="lazy"
             decoding="async"
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            onLoad={() => setImageLoaded(true)}
+            className={`h-full w-full object-cover transition-[transform,opacity] duration-300 group-hover:scale-105 ${
+              imageLoaded ? "opacity-100" : "opacity-0"
+            }`}
           />
         </div>
 
@@ -64,25 +72,39 @@ const ProductCard = memo(function ProductCard({
         </div>
       </button>
 
-      <button
-        type="button"
-        disabled={maxQuantityReached}
-        onClick={() => onAdd(product)}
-        aria-label={`${maxQuantityReached ? "Maximum quantity reached for" : "Add"} ${product.name} to cart`}
-        className="mt-3 flex min-h-11 items-center justify-center gap-2 rounded-md bg-slate-900 py-2 text-xs font-semibold text-white opacity-100 transition-opacity hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 disabled:cursor-not-allowed disabled:opacity-50 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
-      >
-        <ShoppingCart size={14} />
-        {maxQuantityReached ? "Maximum quantity reached" : quantity > 0 ? "Add another" : "Add to cart"}
-      </button>
-
-      {quantity > 0 && (
-        <p
-          role="status"
-          className="mt-2 flex items-center justify-center gap-1 text-xs font-semibold text-emerald-700"
+      {quantity > 0 ? (
+        <div className="mt-3 flex min-h-11 items-center justify-center gap-3 rounded-md border border-slate-200">
+          <button
+            type="button"
+            onClick={() => onChangeQuantity(product.id, quantity - 1)}
+            aria-label={`Decrease ${product.name} quantity`}
+            className="grid h-11 w-11 place-items-center rounded-md text-slate-600 hover:bg-slate-100 hover:text-blue-700 focus-visible:outline-2 focus-visible:outline-blue-700"
+          >
+            <Minus size={15} />
+          </button>
+          <span aria-live="polite" className="min-w-6 text-center text-sm font-semibold text-slate-800">
+            {quantity}
+          </span>
+          <button
+            type="button"
+            disabled={maxQuantityReached}
+            onClick={() => onChangeQuantity(product.id, quantity + 1)}
+            aria-label={`Increase ${product.name} quantity`}
+            className="grid h-11 w-11 place-items-center rounded-md text-slate-600 hover:bg-slate-100 hover:text-blue-700 focus-visible:outline-2 focus-visible:outline-blue-700 disabled:cursor-not-allowed disabled:text-slate-300"
+          >
+            <Plus size={15} />
+          </button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => onAdd(product)}
+          aria-label={`Add ${product.name} to cart`}
+          className="mt-3 flex min-h-11 items-center justify-center gap-2 rounded-md bg-slate-900 py-2 text-xs font-semibold text-white opacity-100 transition-opacity hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
         >
-          <Check size={14} aria-hidden="true" />
-          Added to cart · Qty {quantity}
-        </p>
+          <ShoppingCart size={14} />
+          Add to cart
+        </button>
       )}
 
       {quickViewOpen && (
@@ -108,10 +130,19 @@ function ProductSection({
   cartQuantities = {},
   wishlistIds = [],
   onAdd,
+  onChangeQuantity,
   onToggleWishlist,
   columns = 5,
-  deferred = false
+  deferred = false,
+  shopCategory,
+  shopTag
 }) {
+
+  const shopUrl = shopCategory
+    ? `/shop?category=${encodeURIComponent(shopCategory)}`
+    : shopTag
+      ? `/shop?tag=${encodeURIComponent(shopTag)}`
+      : "/shop";
 
   const gridColumns = {
     2: "lg:grid-cols-2",
@@ -128,7 +159,7 @@ function ProductSection({
           {title}
         </h2>
 
-        <Link to="/shop" className="text-xs font-semibold text-blue-700 hover:underline">
+        <Link to={shopUrl} className="text-xs font-semibold text-blue-700 hover:underline">
           View all
         </Link>
 
@@ -149,6 +180,7 @@ function ProductSection({
             quantity={cartQuantities[product.id] || 0}
             wishlisted={wishlistIds.includes(product.id)}
             onAdd={onAdd}
+            onChangeQuantity={onChangeQuantity}
             onToggleWishlist={onToggleWishlist}
           />
         ))}

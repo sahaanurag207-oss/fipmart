@@ -7,6 +7,7 @@ export default function WishlistPage({
   cartQuantities,
   wishlistIds,
   onAdd,
+  onChangeQuantity,
   onToggleWishlist
 }) {
   const savedProducts = products.filter((product) =>
@@ -32,6 +33,7 @@ export default function WishlistPage({
           cartQuantities={cartQuantities}
           wishlistIds={wishlistIds}
           onAdd={onAdd}
+          onChangeQuantity={onChangeQuantity}
           onToggleWishlist={onToggleWishlist}
           columns={5}
         />

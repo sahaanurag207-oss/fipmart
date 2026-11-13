@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import {
@@ -18,14 +18,8 @@ function Header({
   products
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
-  const mobileSearchInput = useRef(null);
-
-  useEffect(() => {
-    if (mobileSearchOpen) mobileSearchInput.current?.focus();
-  }, [mobileSearchOpen]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -133,17 +127,6 @@ function Header({
 
         <div className="ml-auto flex items-center gap-2 text-slate-600 max-[360px]:gap-1 min-[400px]:gap-4">
 
-          <button
-            type="button"
-            className="grid h-11 w-11 shrink-0 place-items-center rounded-lg hover:bg-slate-100 max-[280px]:h-5.5 max-[280px]:w-5.5 md:hidden"
-            aria-label={mobileSearchOpen ? "Close search" : "Open search"}
-            aria-expanded={mobileSearchOpen}
-            aria-controls="mobile-search"
-            onClick={() => setMobileSearchOpen((open) => !open)}
-          >
-            {mobileSearchOpen ? <X size={21} /> : <Search size={21} />}
-          </button>
-
           <Link
             to="/wishlist"
             aria-label={`Wishlist, ${wishlistCount} saved items`}
@@ -158,7 +141,7 @@ function Header({
 
           <Link
             to="/cart"
-            aria-label={`Shopping cart, ${cartCount} items`}
+            aria-label={`Shopping cart, ${cartCount} item${cartCount === 1 ? "" : "s"}`}
             className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full hover:bg-slate-100 hover:text-blue-700 max-[280px]:h-5.5 max-[280px]:w-5.5"
           >
             <ShoppingBag size={22} />
@@ -171,40 +154,27 @@ function Header({
         </div>
       </div>
 
-      <div
-        id="mobile-search"
-        aria-hidden={!mobileSearchOpen}
-        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out md:hidden ${
-          mobileSearchOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-        }`}
+      <form
+        className="container-wide relative mb-3 flex items-center gap-3 rounded-lg bg-slate-100 px-4 py-2.5 md:hidden"
+        onSubmit={(e) => e.preventDefault()}
       >
-        <div className="min-h-0 overflow-hidden">
-          <form
-            className="container-wide relative flex items-center gap-3 rounded-lg bg-slate-100 px-4 py-2.5"
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <Search size={18} className="shrink-0 text-slate-500" />
-            <input
-              ref={mobileSearchInput}
-              type="search"
-              aria-label="Search products"
-              tabIndex={mobileSearchOpen ? 0 : -1}
-              disabled={!mobileSearchOpen}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onFocus={() => setSuggestionsOpen(true)}
-              onBlur={(event) => {
-                if (!event.currentTarget.contains(event.relatedTarget)) {
-                  setSuggestionsOpen(false);
-                }
-              }}
-              placeholder="Search products..."
-              className="h-9 w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
-            />
-            {searchSuggestions}
-          </form>
-        </div>
-      </div>
+        <Search size={18} className="shrink-0 text-slate-500" />
+        <input
+          type="search"
+          aria-label="Search products"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          onFocus={() => setSuggestionsOpen(true)}
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget)) {
+              setSuggestionsOpen(false);
+            }
+          }}
+          placeholder="Search products..."
+          className="h-9 w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
+        />
+        {searchSuggestions}
+      </form>
 
       {mobileOpen && (
         <nav className="container-wide flex flex-wrap gap-5 border-t border-slate-100 py-4 text-sm font-semibold text-slate-600 md:hidden">

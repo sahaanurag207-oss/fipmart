@@ -23,14 +23,14 @@ function CategoryNav({
           type="button"
           onClick={() => scrollCategories(-1)}
           aria-label="Scroll categories left"
-          className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 2xl:hidden"
+          className="hidden h-9 w-9 shrink-0 place-items-center rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 sm:grid 2xl:hidden"
         >
           <ChevronLeft size={18} />
         </button>
 
         <div
           ref={categorySlider}
-          className="hide-scrollbar flex min-w-0 flex-1 snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth 2xl:justify-between"
+          className="hide-scrollbar flex min-w-0 flex-1 snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth sm:gap-5 2xl:justify-between"
         >
           {categories.map((category) => (
 
@@ -64,7 +64,7 @@ function CategoryNav({
                   height="96"
                   loading="lazy"
                   decoding="async"
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover object-center"
                 />
               </span>
 
@@ -81,7 +81,7 @@ function CategoryNav({
           type="button"
           onClick={() => scrollCategories(1)}
           aria-label="Scroll categories right"
-          className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 2xl:hidden"
+          className="hidden h-9 w-9 shrink-0 place-items-center rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 sm:grid 2xl:hidden"
         >
           <ChevronRight size={18} />
         </button>

@@ -9,7 +9,7 @@ import {
 
 function Footer() {
   return (
-    <footer className="deferred-content mt-8 bg-slate-950 pb-24 text-slate-300">
+    <footer className="deferred-content mt-8 bg-slate-950 pb-32 text-slate-300">
 
       <div className="container-wide grid grid-cols-1 gap-8 py-10 sm:grid-cols-2 lg:grid-cols-4">
 

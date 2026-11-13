@@ -16,6 +16,7 @@ import CheckoutPage from "./pages/CheckoutPage";
 import PaymentPage from "./pages/PaymentPage";
 import WishlistPage from "./pages/WishlistPage";
 import FloatingCart from "./components/FloatingCart";
+import { getCartSummary, normalizeCart } from "./cart";
 
 import {
   MAX_CART_QUANTITY,
@@ -50,13 +51,6 @@ function loadCart() {
     console.error("Could not restore the saved cart.", error);
     return [];
   }
-}
-
-function normalizeCart(cart) {
-  return cart.map((item) => ({
-    ...item,
-    quantity: Math.min(item.quantity, MAX_CART_QUANTITY),
-  }));
 }
 
 function loadWishlist() {
@@ -120,6 +114,7 @@ function HomePage({
   activeCategory,
   setActiveCategory,
   addToCart,
+  onChangeQuantity,
   onToggleWishlist
 }) {
   return (
@@ -143,7 +138,7 @@ function HomePage({
         </div>
       )}
 
-      <main className="container-wide space-y-4 pb-24">
+      <main className="container-wide space-y-4 pb-32">
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_190px]">
           <ProductSection
             title="Premium Products"
@@ -151,8 +146,10 @@ function HomePage({
             cartQuantities={cartQuantities}
             wishlistIds={wishlistIds}
             onAdd={addToCart}
+            onChangeQuantity={onChangeQuantity}
             onToggleWishlist={onToggleWishlist}
             columns={5}
+            shopTag="featured"
           />
 
           <div className="hidden lg:block">
@@ -166,9 +163,11 @@ function HomePage({
           cartQuantities={cartQuantities}
           wishlistIds={wishlistIds}
           onAdd={addToCart}
+          onChangeQuantity={onChangeQuantity}
           onToggleWishlist={onToggleWishlist}
           columns={6}
           deferred
+          shopTag="women"
         />
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(300px,.8fr)_1.5fr]">
@@ -178,9 +177,11 @@ function HomePage({
             cartQuantities={cartQuantities}
             wishlistIds={wishlistIds}
             onAdd={addToCart}
+            onChangeQuantity={onChangeQuantity}
             onToggleWishlist={onToggleWishlist}
             columns={2}
             deferred
+            shopTag="men"
           />
 
           <TopSelling />
@@ -312,18 +313,13 @@ export default function App() {
     [allProducts, filterProducts]
   );
 
-  const cartCount = useMemo(
-    () => cart.reduce((total, item) => total + item.quantity, 0),
+  const { itemCount: cartCount, subtotal: cartSubtotal } = useMemo(
+    () => getCartSummary(cart),
     [cart]
   );
 
   const cartQuantities = useMemo(
     () => Object.fromEntries(cart.map((item) => [item.id, item.quantity])),
-    [cart]
-  );
-
-  const cartSubtotal = useMemo(
-    () => cart.reduce((total, item) => total + item.price * item.quantity, 0),
     [cart]
   );
 
@@ -355,6 +351,7 @@ export default function App() {
               activeCategory={activeCategory}
               setActiveCategory={setActiveCategory}
               addToCart={addToCart}
+              onChangeQuantity={changeCartQuantity}
               onToggleWishlist={toggleWishlist}
             />
           }
@@ -368,6 +365,7 @@ export default function App() {
               cartQuantities={cartQuantities}
               wishlistIds={wishlistIds}
               onAdd={addToCart}
+              onChangeQuantity={changeCartQuantity}
               onToggleWishlist={toggleWishlist}
             />
           }
@@ -381,6 +379,7 @@ export default function App() {
               cartQuantities={cartQuantities}
               wishlistIds={wishlistIds}
               onAdd={addToCart}
+              onChangeQuantity={changeCartQuantity}
               onToggleWishlist={toggleWishlist}
             />
           }

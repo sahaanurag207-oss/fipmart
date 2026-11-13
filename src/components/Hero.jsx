@@ -1,8 +1,14 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 function Hero() {
+  const [loadedImages, setLoadedImages] = useState({});
+
+  const markImageLoaded = (image) => {
+    setLoadedImages((current) => ({ ...current, [image]: true }));
+  };
+
   return (
     <section className="container-wide relative my-4 min-h-62.5 overflow-hidden bg-[#b99b6c] md:min-h-72.5">
 
@@ -16,7 +22,7 @@ function Hero() {
             EXCLUSIVE
           </p>
 
-          <h1 className="mt-1 text-4xl font-black leading-[.98] text-[#b99b6c] md:text-5xl">
+          <h1 className="mt-1 text-[clamp(1.75rem,6vw,3.5rem)] font-black leading-[.98] text-[#b99b6c] md:text-5xl">
             COLLECTION
           </h1>
 
@@ -38,30 +44,46 @@ function Hero() {
               OFF
             </p>
 
-            <Link to="/shop" className="mt-4 inline-flex items-center gap-2 border-2 border-white bg-white px-3 py-2 text-xs font-bold text-[#674b2d] hover:bg-slate-100 md:px-4">
+            <Link to="/shop?tag=women" className="mt-4 inline-flex items-center gap-2 border-2 border-white bg-white px-3 py-2 text-xs font-bold text-[#674b2d] hover:bg-slate-100 md:px-4">
               ORDER NOW
               <ArrowRight size={14} />
             </Link>
 
           </div>
 
-          <img
-            src="/images/photo-1584917865442-de89df76afd3.webp"
-            alt="Red handbag"
-            width="700"
-            height="700"
-            fetchPriority="high"
-            className="absolute bottom-0 right-[22%] h-[88%] w-[44%] object-contain object-bottom drop-shadow-2xl md:right-[23%] md:w-[36%]"
-          />
+          <div className="absolute bottom-0 right-[2%] z-10 h-[88%] w-[50%] md:right-[25%] md:w-[34%]">
+            {!loadedImages.red && (
+              <div aria-hidden="true" className="absolute inset-3 animate-pulse rounded-3xl bg-white/20" />
+            )}
+            <img
+              src="/images/photo-1584917865442-de89df76afd3.webp"
+              alt="Red handbag"
+              width="700"
+              height="700"
+              fetchPriority="high"
+              onLoad={() => markImageLoaded("red")}
+              className={`h-full w-full object-contain object-bottom drop-shadow-2xl transition-opacity duration-300 ${
+                loadedImages.red ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          </div>
 
-          <img
-            src="/images/photo-1590874103328-eac38a683ce7.webp"
-            alt="Fashion handbag"
-            width="500"
-            height="600"
-            fetchPriority="high"
-            className="absolute bottom-0 right-[1%] hidden h-[82%] w-[24%] object-contain object-bottom md:block"
-          />
+          <div className="absolute bottom-0 right-[1%] hidden h-[82%] w-[23%] md:block">
+            {!loadedImages.fashion && (
+              <div aria-hidden="true" className="absolute inset-3 animate-pulse rounded-3xl bg-white/20" />
+            )}
+            <img
+              src="/images/photo-1590874103328-eac38a683ce7.webp"
+              alt="Fashion handbag"
+              width="500"
+              height="600"
+              fetchPriority="high"
+              onLoad={() => markImageLoaded("fashion")}
+              className={`h-full w-full object-contain object-bottom transition-opacity duration-300 ${
+                loadedImages.fashion ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          </div>
 
         </div>
 
