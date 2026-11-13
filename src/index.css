@@ -95,6 +95,17 @@ img {
   opacity: 1;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .product-card,
+  .product-card::after {
+    transition: none;
+  }
+
+  .product-card:hover {
+    transform: none;
+  }
+}
+
 .deferred-content {
   content-visibility: auto;
   contain-intrinsic-size: auto 440px;

@@ -26,7 +26,7 @@ const ProductCard = memo(function ProductCard({
         aria-label={`${wishlisted ? "Remove" : "Add"} ${product.name} ${wishlisted ? "from" : "to"} wishlist`}
         aria-pressed={wishlisted}
         onClick={() => onToggleWishlist(product.id)}
-        className={`absolute right-3 top-3 z-10 rounded-full bg-white/90 p-2 shadow-sm hover:text-rose-500 ${
+        className={`absolute right-3 top-3 z-10 rounded-full bg-white/90 p-2 shadow-sm transition-transform duration-200 hover:scale-110 active:scale-95 motion-reduce:transition-none motion-reduce:transform-none hover:text-rose-500 ${
           wishlisted ? "text-rose-500" : "text-slate-500"
         }`}
       >
@@ -51,7 +51,7 @@ const ProductCard = memo(function ProductCard({
             loading="lazy"
             decoding="async"
             onLoad={() => setImageLoaded(true)}
-            className={`h-full w-full object-cover transition-[transform,opacity] duration-300 group-hover:scale-105 ${
+            className={`h-full w-full object-cover transition-[transform,opacity] duration-300 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100 ${
               imageLoaded ? "opacity-100" : "opacity-0"
             }`}
           />
@@ -100,7 +100,7 @@ const ProductCard = memo(function ProductCard({
           type="button"
           onClick={() => onAdd(product)}
           aria-label={`Add ${product.name} to cart`}
-          className="mt-3 flex min-h-11 items-center justify-center gap-2 rounded-md bg-slate-900 py-2 text-xs font-semibold text-white opacity-100 transition-opacity hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+          className="mt-3 flex min-h-11 items-center justify-center gap-2 rounded-md bg-slate-900 py-2 text-xs font-semibold text-white opacity-100 transition-[opacity,transform] duration-200 hover:bg-blue-700 active:scale-[.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 motion-reduce:transition-none motion-reduce:transform-none sm:translate-y-1 sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100 sm:focus-visible:translate-y-0 sm:focus-visible:opacity-100"
         >
           <ShoppingCart size={14} />
           Add to cart
