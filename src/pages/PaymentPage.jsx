@@ -1,16 +1,34 @@
 import { CreditCard, LockKeyhole } from "lucide-react";
-import { Link, Navigate, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 
 function formatPrice(price) {
   return `$${price.toFixed(2)}`;
 }
 
-export default function PaymentPage({ cart, subtotal }) {
+export default function PaymentPage({ cart, subtotal, onPlaceOrder }) {
   const { state } = useLocation();
+  const navigate = useNavigate();
+  const [orderError, setOrderError] = useState("");
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
   if (!state?.shippingDetails || cart.length === 0) {
     return <Navigate to={cart.length > 0 ? "/checkout" : "/cart"} replace />;
   }
+
+  const handlePlaceOrder = () => {
+    setOrderError("");
+    setIsPlacingOrder(true);
+
+    try {
+      onPlaceOrder(state.shippingDetails);
+      navigate("/order-confirmation", { replace: true });
+    } catch (error) {
+      console.error("Could not save the cash-on-delivery order.", error);
+      setOrderError("Your order could not be saved. Check this browser's storage and try again.");
+      setIsPlacingOrder(false);
+    }
+  };
 
   return (
     <main className="container-wide pb-24 pt-8 sm:pt-10">
@@ -38,29 +56,56 @@ export default function PaymentPage({ cart, subtotal }) {
             </div>
           </div>
 
-          <div className="mt-6 rounded-xl border border-slate-200 p-4 transition-transform hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:transform-none">
+          <label className="mt-6 flex cursor-pointer items-start gap-3 rounded-xl border border-blue-200 bg-blue-50/60 p-4 transition-transform hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:transform-none">
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="cash-on-delivery"
+              defaultChecked
+              className="mt-1 accent-blue-700"
+            />
+            <div className="flex-1">
+              <p className="font-semibold text-slate-900">Cash on delivery</p>
+              <p className="mt-1 text-sm text-slate-600">
+                Pay in cash when your order is delivered.
+              </p>
+            </div>
+            <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800">
+              Available
+            </span>
+          </label>
+
+          <div aria-disabled="true" className="mt-3 rounded-xl border border-slate-200 p-4 opacity-60">
             <div className="flex items-center gap-3">
               <CreditCard size={20} className="text-slate-500" aria-hidden="true" />
               <div className="flex-1">
                 <p className="font-semibold text-slate-800">Credit or debit card</p>
-                <p className="mt-1 text-sm text-slate-500">
-                  Card payments are not available yet.
-                </p>
+                <p className="mt-1 text-sm text-slate-500">Unavailable</p>
               </div>
-              <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
-                Unavailable
-              </span>
             </div>
           </div>
 
-          <div role="status" className="mt-5 flex gap-3 rounded-xl bg-amber-50 p-4 text-sm text-amber-950">
+          <div role="status" className="mt-5 flex gap-3 rounded-xl bg-blue-50 p-4 text-sm text-blue-950">
             <LockKeyhole size={18} className="mt-0.5 shrink-0" aria-hidden="true" />
-            <p>
-              Payment processing is not connected. No payment has been taken, and your order has not been placed.
-            </p>
+            <p>There is no upfront payment. Have the order total ready when your delivery arrives.</p>
           </div>
 
-          <div className="mt-6 flex flex-wrap gap-3">
+          {orderError && (
+            <p role="alert" className="mt-5 rounded-xl bg-rose-50 p-4 text-sm text-rose-800">
+              {orderError}
+            </p>
+          )}
+
+          <button
+            type="button"
+            onClick={handlePlaceOrder}
+            disabled={isPlacingOrder}
+            className="mt-6 flex w-full items-center justify-center rounded-xl bg-blue-700 px-5 py-3.5 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5 hover:bg-blue-800 active:scale-[.99] disabled:cursor-wait disabled:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 motion-reduce:transition-none motion-reduce:transform-none"
+          >
+            {isPlacingOrder ? "Confirming order..." : "Confirm cash on delivery order"}
+          </button>
+
+          <div className="mt-5 flex flex-wrap gap-3">
             <Link
               to="/checkout"
               state={state}

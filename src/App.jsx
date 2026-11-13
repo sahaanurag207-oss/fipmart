@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 import Header from "./components/Header";
 import CategoryNav from "./components/CategoryNav";
@@ -14,10 +14,12 @@ import AccountPage from "./pages/AccountPage";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import PaymentPage from "./pages/PaymentPage";
+import OrderConfirmationPage from "./pages/OrderConfirmationPage";
 import WishlistPage from "./pages/WishlistPage";
 import FloatingCart from "./components/FloatingCart";
 import ScrollToTop from "./components/ScrollToTop";
 import { getCartSummary, normalizeCart } from "./cart";
+import { createOrder } from "./order";
 
 import {
   MAX_CART_QUANTITY,
@@ -103,6 +105,46 @@ function loadProfile() {
   } catch (error) {
     console.error("Could not restore the saved profile.", error);
     return emptyProfile();
+  }
+}
+
+function loadLastOrder() {
+  try {
+    const savedOrder = localStorage.getItem("flipmart-last-order");
+    if (!savedOrder) return null;
+
+    const order = JSON.parse(savedOrder);
+    if (
+      !order ||
+      typeof order !== "object" ||
+      Array.isArray(order) ||
+      typeof order.id !== "string" ||
+      !Array.isArray(order.items) ||
+      order.items.length === 0 ||
+      !order.items.every((item) =>
+        item &&
+        Number.isSafeInteger(item.id) &&
+        typeof item.name === "string" &&
+        Number.isFinite(item.price) &&
+        item.price >= 0 &&
+        Number.isSafeInteger(item.quantity) &&
+        item.quantity > 0
+      ) ||
+      !Number.isFinite(order.subtotal) ||
+      !Number.isFinite(Date.parse(order.placedAt)) ||
+      !Number.isFinite(Date.parse(order.estimatedDeliveryStart)) ||
+      !Number.isFinite(Date.parse(order.estimatedDeliveryEnd)) ||
+      !order.shippingDetails ||
+      typeof order.shippingDetails !== "object" ||
+      Array.isArray(order.shippingDetails)
+    ) {
+      throw new TypeError("Saved order data is invalid.");
+    }
+
+    return order;
+  } catch (error) {
+    console.error("Could not restore the saved order.", error);
+    return null;
   }
 }
 
@@ -198,6 +240,7 @@ export default function App() {
   const [cart, setCart] = useState(loadCart);
   const [wishlistIds, setWishlistIds] = useState(loadWishlist);
   const [profile, setProfile] = useState(loadProfile);
+  const [lastOrder, setLastOrder] = useState(loadLastOrder);
   const [activeCategory, setActiveCategory] = useState("");
 
   useEffect(() => {
@@ -245,6 +288,14 @@ export default function App() {
   }, []);
 
   const clearCart = useCallback(() => setCart([]), []);
+
+  const placeOrder = useCallback((shippingDetails) => {
+    const order = createOrder(cart, shippingDetails);
+    localStorage.setItem("flipmart-last-order", JSON.stringify(order));
+    setLastOrder(order);
+    setCart([]);
+    return order;
+  }, [cart]);
 
   const toggleWishlist = useCallback((productId) => {
     setWishlistIds((current) =>
@@ -415,7 +466,22 @@ export default function App() {
 
         <Route
           path="/checkout/payment"
-          element={<PaymentPage cart={cart} subtotal={cartSubtotal} />}
+          element={
+            <PaymentPage
+              cart={cart}
+              subtotal={cartSubtotal}
+              onPlaceOrder={placeOrder}
+            />
+          }
+        />
+
+        <Route
+          path="/order-confirmation"
+          element={
+            lastOrder
+              ? <OrderConfirmationPage order={lastOrder} />
+              : <Navigate to="/cart" replace />
+          }
         />
 
         <Route
