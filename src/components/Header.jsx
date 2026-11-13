@@ -96,7 +96,7 @@ export default function Header({
           <Link
             to="/cart"
             aria-label={`Shopping cart, ${cartCount} items`}
-            className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full hover:bg-slate-100 hover:text-blue-700 max-[280px]:h-[22px] max-[280px]:w-[22px]"
+            className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full hover:bg-slate-100 hover:text-blue-700 max-[280px]:h-5.5 max-[280px]:w-5.5"
           >
             <ShoppingBag size={22} />
 
