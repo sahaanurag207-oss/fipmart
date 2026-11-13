@@ -16,6 +16,7 @@ import CheckoutPage from "./pages/CheckoutPage";
 import PaymentPage from "./pages/PaymentPage";
 import WishlistPage from "./pages/WishlistPage";
 import FloatingCart from "./components/FloatingCart";
+import ScrollToTop from "./components/ScrollToTop";
 import { getCartSummary, normalizeCart } from "./cart";
 
 import {
@@ -631,6 +632,7 @@ export default function App() {
       <Footer />
 
       <FloatingCart count={cartCount} subtotal={cartSubtotal} />
+      <ScrollToTop />
     </div>
   );
 }
