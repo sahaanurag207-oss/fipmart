@@ -43,7 +43,7 @@ function CategoryNav({
                     : category.name
                 )
               }
-              className={`group flex w-[110px] shrink-0 snap-start flex-col items-center gap-2 rounded-lg px-1 py-1 text-center text-[11px] font-semibold transition-colors ${
+              className={`group flex w-27.5 shrink-0 snap-start flex-col items-center gap-2 rounded-lg px-1 py-1 text-center text-[11px] font-semibold transition-colors ${
                 activeCategory === category.name
                   ? "text-blue-700"
                   : "text-slate-600 hover:text-blue-700"
@@ -68,7 +68,7 @@ function CategoryNav({
                 />
               </span>
 
-              <span className="max-w-[96px] leading-tight whitespace-normal">
+              <span className="max-w-24 leading-tight whitespace-normal">
                 {category.name}
               </span>
 

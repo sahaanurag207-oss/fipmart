@@ -12,6 +12,7 @@ import {
 
 function Header({
   cartCount,
+  wishlistCount,
   search,
   setSearch,
   products
@@ -143,7 +144,11 @@ function Header({
             {mobileSearchOpen ? <X size={21} /> : <Search size={21} />}
           </button>
 
-          <Link to="/offers" aria-label="Wishlist" className="hidden sm:block hover:text-blue-700">
+          <Link
+            to="/wishlist"
+            aria-label={`Wishlist, ${wishlistCount} saved items`}
+            className="hidden sm:block hover:text-blue-700"
+          >
             <Heart size={22} />
           </Link>
 
@@ -202,8 +207,9 @@ function Header({
       </div>
 
       {mobileOpen && (
-        <nav className="container-wide flex gap-5 border-t border-slate-100 py-4 text-sm font-semibold text-slate-600 md:hidden">
+        <nav className="container-wide flex flex-wrap gap-5 border-t border-slate-100 py-4 text-sm font-semibold text-slate-600 md:hidden">
           <Link to="/shop" onClick={() => setMobileOpen(false)} className="hover:text-blue-700">Shop</Link>
+          <Link to="/wishlist" onClick={() => setMobileOpen(false)} className="hover:text-blue-700">Wishlist</Link>
           <Link to="/cart" onClick={() => setMobileOpen(false)} className="hover:text-blue-700">Cart</Link>
           <Link to="/account" onClick={() => setMobileOpen(false)} className="hover:text-blue-700">Account</Link>
         </nav>

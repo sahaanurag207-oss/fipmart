@@ -3,20 +3,31 @@ import { Check, Heart, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { MAX_CART_QUANTITY } from "../data";
 
-const ProductCard = memo(function ProductCard({ product, quantity, onAdd }) {
+const ProductCard = memo(function ProductCard({
+  product,
+  quantity,
+  wishlisted,
+  onAdd,
+  onToggleWishlist
+}) {
   const maxQuantityReached = quantity >= MAX_CART_QUANTITY;
 
   return (
     <article className="product-card group relative flex min-w-0 flex-col border border-slate-200 bg-white p-3">
 
       <button
-        aria-label="Add to wishlist"
-        className="absolute right-3 top-3 z-10 rounded-full bg-white/90 p-2 text-slate-500 shadow-sm hover:text-rose-500"
+        type="button"
+        aria-label={`${wishlisted ? "Remove" : "Add"} ${product.name} ${wishlisted ? "from" : "to"} wishlist`}
+        aria-pressed={wishlisted}
+        onClick={() => onToggleWishlist(product.id)}
+        className={`absolute right-3 top-3 z-10 rounded-full bg-white/90 p-2 shadow-sm hover:text-rose-500 ${
+          wishlisted ? "text-rose-500" : "text-slate-500"
+        }`}
       >
-        <Heart size={16} />
+        <Heart size={16} fill={wishlisted ? "currentColor" : "none"} />
       </button>
 
-      <div className="aspect-[4/3] w-full overflow-hidden bg-slate-100">
+      <div className="aspect-4/3 w-full overflow-hidden bg-slate-100">
 
         <img
           src={product.image}
@@ -81,7 +92,9 @@ function ProductSection({
   title,
   products,
   cartQuantities = {},
+  wishlistIds = [],
   onAdd,
+  onToggleWishlist,
   columns = 5,
   deferred = false
 }) {
@@ -120,7 +133,9 @@ function ProductSection({
             key={product.id}
             product={product}
             quantity={cartQuantities[product.id] || 0}
+            wishlisted={wishlistIds.includes(product.id)}
             onAdd={onAdd}
+            onToggleWishlist={onToggleWishlist}
           />
         ))}
 

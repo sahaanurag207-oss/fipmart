@@ -1,4 +1,4 @@
-import { ArrowRight, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
+import { ArrowRight, Heart, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 import { MAX_CART_QUANTITY } from "../data";
 
@@ -11,7 +11,8 @@ export default function CartPage({
   subtotal,
   onChangeQuantity,
   onRemove,
-  onClear
+  onClear,
+  onSaveForLater
 }) {
   const [searchParams] = useSearchParams();
   const checkoutCancelled = searchParams.get("checkout") === "cancelled";
@@ -76,7 +77,7 @@ export default function CartPage({
                 key={item.id}
                 className="grid grid-cols-[76px_minmax(0,1fr)] gap-4 p-4 sm:grid-cols-[88px_minmax(0,1fr)_120px_100px] sm:items-center sm:gap-5 sm:px-6"
               >
-                <div className="grid h-[76px] w-[76px] place-items-center rounded-xl bg-slate-50 p-2 sm:h-[88px] sm:w-[88px]">
+                <div className="grid h-19 w-19 place-items-center rounded-xl bg-slate-50 p-2 sm:h-22 sm:w-22">
                   <img
                     src={item.image}
                     alt={item.name}
@@ -93,9 +94,17 @@ export default function CartPage({
                   <p className="mt-1 text-sm text-slate-500">{formatPrice(item.price)} each</p>
                   <button
                     type="button"
+                    onClick={() => onSaveForLater(item.id)}
+                    className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-blue-700 hover:text-blue-900"
+                  >
+                    <Heart size={13} />
+                    Save for later
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => onRemove(item.id)}
                     aria-label={`Remove ${item.name} from cart`}
-                    className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-rose-600 sm:hidden"
+                    className="mt-2 ml-3 inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-rose-600 sm:hidden"
                   >
                     <Trash2 size={13} />
                     Remove

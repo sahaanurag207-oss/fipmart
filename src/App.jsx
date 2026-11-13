@@ -13,6 +13,7 @@ import InfoPage from "./pages/InfoPage";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import PaymentPage from "./pages/PaymentPage";
+import WishlistPage from "./pages/WishlistPage";
 import FloatingCart from "./components/FloatingCart";
 
 import {
@@ -57,14 +58,33 @@ function normalizeCart(cart) {
   }));
 }
 
+function loadWishlist() {
+  try {
+    const savedWishlist = localStorage.getItem("flipmart-wishlist");
+    if (!savedWishlist) return [];
+
+    const parsedWishlist = JSON.parse(savedWishlist);
+    if (!Array.isArray(parsedWishlist)) {
+      throw new TypeError("Saved wishlist data must be an array.");
+    }
+
+    return [...new Set(parsedWishlist.filter(Number.isSafeInteger))];
+  } catch (error) {
+    console.error("Could not restore the saved wishlist.", error);
+    return [];
+  }
+}
+
 function HomePage({
   premium,
   women,
   men,
   cartQuantities,
+  wishlistIds,
   activeCategory,
   setActiveCategory,
-  addToCart
+  addToCart,
+  onToggleWishlist
 }) {
   return (
     <>
@@ -93,7 +113,9 @@ function HomePage({
             title="Premium Products"
             products={premium}
             cartQuantities={cartQuantities}
+            wishlistIds={wishlistIds}
             onAdd={addToCart}
+            onToggleWishlist={onToggleWishlist}
             columns={5}
           />
 
@@ -106,7 +128,9 @@ function HomePage({
           title="Clothing and Girls Collections"
           products={women}
           cartQuantities={cartQuantities}
+          wishlistIds={wishlistIds}
           onAdd={addToCart}
+          onToggleWishlist={onToggleWishlist}
           columns={6}
           deferred
         />
@@ -116,7 +140,9 @@ function HomePage({
             title="Men's Fashion"
             products={men}
             cartQuantities={cartQuantities}
+            wishlistIds={wishlistIds}
             onAdd={addToCart}
+            onToggleWishlist={onToggleWishlist}
             columns={2}
             deferred
           />
@@ -131,6 +157,7 @@ function HomePage({
 export default function App() {
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState(loadCart);
+  const [wishlistIds, setWishlistIds] = useState(loadWishlist);
   const [activeCategory, setActiveCategory] = useState("");
 
   useEffect(() => {
@@ -140,6 +167,14 @@ export default function App() {
       console.error("Could not save the cart on this device.", error);
     }
   }, [cart]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("flipmart-wishlist", JSON.stringify(wishlistIds));
+    } catch (error) {
+      console.error("Could not save the wishlist on this device.", error);
+    }
+  }, [wishlistIds]);
 
   const addToCart = useCallback((product) => {
     setCart((current) => {
@@ -170,6 +205,21 @@ export default function App() {
   }, []);
 
   const clearCart = useCallback(() => setCart([]), []);
+
+  const toggleWishlist = useCallback((productId) => {
+    setWishlistIds((current) =>
+      current.includes(productId)
+        ? current.filter((id) => id !== productId)
+        : [...current, productId]
+    );
+  }, []);
+
+  const saveForLater = useCallback((productId) => {
+    setWishlistIds((current) =>
+      current.includes(productId) ? current : [...current, productId]
+    );
+    setCart((current) => current.filter((item) => item.id !== productId));
+  }, []);
 
   const filterProducts = useCallback((products) => {
     return products.filter((product) =>
@@ -222,6 +272,7 @@ export default function App() {
     <div className="min-h-screen bg-[#f2f3f5]">
       <Header
         cartCount={cartCount}
+        wishlistCount={wishlistIds.length}
         search={search}
         setSearch={setSearch}
         products={allProducts}
@@ -241,9 +292,11 @@ export default function App() {
               women={women}
               men={men}
               cartQuantities={cartQuantities}
+              wishlistIds={wishlistIds}
               activeCategory={activeCategory}
               setActiveCategory={setActiveCategory}
               addToCart={addToCart}
+              onToggleWishlist={toggleWishlist}
             />
           }
         />
@@ -254,7 +307,22 @@ export default function App() {
             <ShopPage
               products={shopProducts}
               cartQuantities={cartQuantities}
+              wishlistIds={wishlistIds}
               onAdd={addToCart}
+              onToggleWishlist={toggleWishlist}
+            />
+          }
+        />
+
+        <Route
+          path="/wishlist"
+          element={
+            <WishlistPage
+              products={allProducts}
+              cartQuantities={cartQuantities}
+              wishlistIds={wishlistIds}
+              onAdd={addToCart}
+              onToggleWishlist={toggleWishlist}
             />
           }
         />
@@ -268,6 +336,7 @@ export default function App() {
               onChangeQuantity={changeCartQuantity}
               onRemove={removeFromCart}
               onClear={clearCart}
+              onSaveForLater={saveForLater}
             />
           }
         />
@@ -399,23 +468,23 @@ export default function App() {
           element={
             <InfoPage
               title="My account"
-              description="Manage saved carts, track your orders, update account details, and keep your shopping preferences ready for your next favorite find."
+              description="Your wishlist and cart are saved on this device. Account profiles and order history are not connected yet."
               items={[
                 {
                   title: "Order history",
-                  text: "Review previous purchases, delivery details, and returns in one place."
+                  text: "Order history will be available when checkout can submit orders."
                 },
                 {
                   title: "Saved items",
-                  text: "Bookmark products you want to revisit before your next order."
+                  text: "Save favorites to your wishlist and revisit them later on this device."
                 },
                 {
                   title: "Preferences",
-                  text: "Sync your favorite brands, categories, and notification settings."
+                  text: "Use product search and category filters to find items that suit you."
                 },
                 {
                   title: "Fast checkout",
-                  text: "Keep billing and shipping information ready for simpler future orders."
+                  text: "Enter delivery details during checkout; they are not stored in an account."
                 }
               ]}
             />
@@ -427,23 +496,23 @@ export default function App() {
           element={
             <InfoPage
               title="Track order"
-              description="Follow your order from packing to doorstep with quick updates on shipment progress, estimated delivery, and status changes."
+              description="Order tracking will be available when order processing is connected. You can still review your saved cart and checkout details."
               items={[
                 {
-                  title: "Shipment updates",
-                  text: "Receive live progress notifications as your order moves through fulfillment."
+                  title: "No active orders",
+                  text: "There are no submitted orders to track right now."
                 },
                 {
-                  title: "Estimated delivery",
-                  text: "See the expected arrival window for each package before it ships."
+                  title: "Saved cart",
+                  text: "Your cart stays saved on this device while you continue shopping."
                 },
                 {
-                  title: "Support if needed",
-                  text: "If delivery is delayed, our team can help review the status and next steps."
+                  title: "Need help?",
+                  text: "Contact support if you have a question about a checkout or delivery."
                 },
                 {
-                  title: "Secure delivery",
-                  text: "Check your package updates anytime from your account dashboard."
+                  title: "Tracking updates",
+                  text: "Shipment status and delivery estimates will appear here when order tracking is available."
                 }
               ]}
             />
@@ -455,23 +524,23 @@ export default function App() {
           element={
             <InfoPage
               title="Returns & refunds"
-              description="We want every purchase to feel right. If something is not the perfect fit, we make returns and refunds simple and transparent."
+              description="Returns and refunds will be available when order and payment processing are connected. Contact support with questions about the catalog."
               items={[
                 {
                   title: "Easy returns",
-                  text: "Start a return online, print a label, and send it back with minimal hassle."
+                  text: "Return requests cannot be started until orders can be processed."
                 },
                 {
                   title: "Refund timing",
-                  text: "Refunds are issued promptly once the return is approved and processed."
+                  text: "Refund timing depends on a connected payment and order system."
                 },
                 {
                   title: "Damaged items",
-                  text: "Report damaged or incorrect items quickly so we can replace or refund them."
+                  text: "Contact support with product questions or concerns."
                 },
                 {
                   title: "Helpful support",
-                  text: "Our team is available to answer questions about return eligibility and next steps."
+                  text: "Our support team can answer questions about the current shopping experience."
                 }
               ]}
             />
@@ -487,15 +556,15 @@ export default function App() {
               items={[
                 {
                   title: "How long does shipping take?",
-                  text: "Most orders ship within 1–3 business days, with delivery times varying by location and item type."
+                  text: "Delivery estimates are not available yet. Standard shipping is currently listed as free at checkout."
                 },
                 {
                   title: "Can I change my order?",
-                  text: "If the order has not yet shipped, we may be able to help update or cancel it."
+                  text: "Orders cannot be changed or cancelled because order submission is not connected. You can update your cart before checkout."
                 },
                 {
                   title: "Do you offer exchanges?",
-                  text: "Yes, exchanges can be arranged for eligible items if the size, style, or replacement is available."
+                  text: "Exchanges will be available when order processing is connected."
                 },
                 {
                   title: "Why was my item unavailable?",

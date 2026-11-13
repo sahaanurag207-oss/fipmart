@@ -98,6 +98,26 @@ export default function CheckoutPage({ cart, subtotal }) {
             </div>
           </section>
 
+          <section aria-labelledby="shipping-method-heading" className="mt-8 border-t border-slate-100 pt-6">
+            <h2 id="shipping-method-heading" className="text-lg font-bold text-slate-900">
+              Delivery method
+            </h2>
+            <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-xl border border-blue-200 bg-blue-50/60 p-4">
+              <input
+                type="radio"
+                name="shippingMethod"
+                value="standard"
+                defaultChecked
+                required
+                className="mt-1 accent-blue-700"
+              />
+              <span className="flex-1">
+                <span className="block font-semibold text-slate-900">Standard delivery</span>
+              </span>
+              <span className="text-sm font-bold text-slate-900">Free</span>
+            </label>
+          </section>
+
           <button
             type="submit"
             className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-700 px-5 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 sm:w-auto"
