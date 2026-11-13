@@ -1,7 +1,8 @@
+import { memo } from "react";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
-export default function Hero() {
+function Hero() {
   return (
     <section className="container-wide relative my-4 min-h-62.5 overflow-hidden bg-[#b99b6c] md:min-h-72.5">
 
@@ -29,11 +30,7 @@ export default function Hero() {
 
         <div className="relative flex min-h-55 items-center justify-center overflow-hidden px-5 py-5 md:min-h-72.5">
 
-          <div className="absolute left-5 top-8 text-5xl font-black text-white/70">
-            70%
-          </div>
-
-          <div className="z-10 mr-auto md:mr-0 md:ml-0">
+          <div className="relative z-20 mr-auto w-[43%] bg-[#9c7050] p-3 md:mr-0 md:ml-0 md:w-auto md:bg-transparent md:p-0">
 
             <p className="text-4xl font-black leading-none text-white md:text-5xl">
               70%
@@ -41,7 +38,7 @@ export default function Hero() {
               OFF
             </p>
 
-            <Link to="/shop" className="mt-4 flex items-center gap-2 border-2 border-white px-4 py-2 text-xs font-bold text-white hover:bg-white hover:text-[#94774b]">
+            <Link to="/shop" className="mt-4 inline-flex items-center gap-2 border-2 border-white bg-white px-3 py-2 text-xs font-bold text-[#674b2d] hover:bg-slate-100 md:px-4">
               ORDER NOW
               <ArrowRight size={14} />
             </Link>
@@ -50,14 +47,20 @@ export default function Hero() {
 
           <img
             src="/images/photo-1584917865442-de89df76afd3.webp"
-            alt="Black handbag"
-            className="absolute bottom-0 right-[3%] h-[88%] w-[52%] object-contain object-bottom drop-shadow-2xl md:right-[7%] md:w-[48%]"
+            alt="Red handbag"
+            width="700"
+            height="700"
+            fetchPriority="high"
+            className="absolute bottom-0 right-[22%] h-[88%] w-[44%] object-contain object-bottom drop-shadow-2xl md:right-[23%] md:w-[36%]"
           />
 
           <img
             src="/images/photo-1590874103328-eac38a683ce7.webp"
             alt="Fashion handbag"
-            className="absolute bottom-0 right-0 hidden h-[82%] w-[26%] object-contain object-bottom md:block"
+            width="500"
+            height="600"
+            fetchPriority="high"
+            className="absolute bottom-0 right-[1%] hidden h-[82%] w-[24%] object-contain object-bottom md:block"
           />
 
         </div>
@@ -67,3 +70,5 @@ export default function Hero() {
     </section>
   );
 }
+
+export default memo(Hero);

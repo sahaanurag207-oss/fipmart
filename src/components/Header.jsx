@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import {
@@ -10,18 +10,69 @@ import {
   X
 } from "lucide-react";
 
-export default function Header({
+function Header({
   cartCount,
   search,
-  setSearch
+  setSearch,
+  products
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const mobileSearchInput = useRef(null);
 
   useEffect(() => {
     if (mobileSearchOpen) mobileSearchInput.current?.focus();
   }, [mobileSearchOpen]);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setDebouncedSearch(search.trim());
+    }, 200);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [search]);
+
+  const suggestions = useMemo(() => {
+    if (!debouncedSearch) return [];
+    const query = debouncedSearch.toLowerCase();
+    return products
+      .filter((product) => product.name.toLowerCase().includes(query))
+      .slice(0, 5);
+  }, [debouncedSearch, products]);
+
+  const showSuggestions =
+    suggestionsOpen &&
+    Boolean(search.trim()) &&
+    debouncedSearch === search.trim();
+
+  const searchSuggestions = showSuggestions && (
+    <div
+      role="region"
+      aria-label="Product search suggestions"
+      className="absolute inset-x-0 top-full z-30 mt-1 overflow-hidden rounded-lg border border-slate-200 bg-white py-1 shadow-lg"
+    >
+      {suggestions.length > 0 ? suggestions.map((product) => (
+        <button
+          key={product.id}
+          type="button"
+          onMouseDown={(event) => event.preventDefault()}
+          onClick={() => {
+            setSearch(product.name);
+            setSuggestionsOpen(false);
+          }}
+          className="block w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50"
+        >
+          {product.name}
+        </button>
+      )) : (
+        <p role="status" className="px-4 py-3 text-sm text-slate-500">
+          No products found. Try another search.
+        </p>
+      )}
+    </div>
+  );
 
   return (
     <header className="border-b border-slate-100 bg-white">
@@ -50,7 +101,7 @@ export default function Header({
         </Link>
 
         <form
-          className="ml-4 hidden flex-1 items-center rounded-md bg-slate-100 px-4 md:flex"
+          className="relative ml-4 hidden flex-1 items-center rounded-md bg-slate-100 px-4 md:flex"
           onSubmit={(e) => e.preventDefault()}
         >
           <Search size={19} className="text-slate-500" />
@@ -60,13 +111,20 @@ export default function Header({
             aria-label="Search products"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            onFocus={() => setSuggestionsOpen(true)}
+            onBlur={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget)) {
+                setSuggestionsOpen(false);
+              }
+            }}
             placeholder="Search for Products, Brand and More"
             className="h-11 w-full bg-transparent px-3 text-sm outline-none placeholder:text-slate-400"
           />
+          {searchSuggestions}
         </form>
 
         <Link
-          to="/shop"
+          to="/vendor"
           className="hidden shrink-0 rounded-full bg-blue-700 px-6 py-3 text-xs font-semibold text-white transition hover:bg-blue-800 sm:block"
         >
           Become a Vendor
@@ -117,7 +175,7 @@ export default function Header({
       >
         <div className="min-h-0 overflow-hidden">
           <form
-            className="container-wide flex items-center gap-3 rounded-lg bg-slate-100 px-4 py-2.5"
+            className="container-wide relative flex items-center gap-3 rounded-lg bg-slate-100 px-4 py-2.5"
             onSubmit={(e) => e.preventDefault()}
           >
             <Search size={18} className="shrink-0 text-slate-500" />
@@ -129,9 +187,16 @@ export default function Header({
               disabled={!mobileSearchOpen}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              onFocus={() => setSuggestionsOpen(true)}
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget)) {
+                  setSuggestionsOpen(false);
+                }
+              }}
               placeholder="Search products..."
               className="h-9 w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
             />
+            {searchSuggestions}
           </form>
         </div>
       </div>
@@ -147,3 +212,5 @@ export default function Header({
     </header>
   );
 }
+
+export default memo(Header);

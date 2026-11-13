@@ -40,7 +40,7 @@ export default function CartPage({
   }
 
   return (
-    <main className="container-wide pb-24 pt-8 sm:py-10">
+    <main className="container-wide pb-24 pt-8 sm:pt-10">
       {checkoutCancelled && (
         <p role="status" className="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
           Checkout was cancelled. Your items are still in your cart.
@@ -77,7 +77,15 @@ export default function CartPage({
                 className="grid grid-cols-[76px_minmax(0,1fr)] gap-4 p-4 sm:grid-cols-[88px_minmax(0,1fr)_120px_100px] sm:items-center sm:gap-5 sm:px-6"
               >
                 <div className="grid h-[76px] w-[76px] place-items-center rounded-xl bg-slate-50 p-2 sm:h-[88px] sm:w-[88px]">
-                  <img src={item.image} alt={item.name} className="h-full w-full object-contain" />
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    width="88"
+                    height="88"
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-contain"
+                  />
                 </div>
 
                 <div className="min-w-0">
@@ -153,7 +161,7 @@ export default function CartPage({
             <span className="font-semibold text-slate-900">{formatPrice(subtotal)}</span>
           </div>
           <p className="mt-2 text-xs leading-5 text-slate-500">
-            Standard shipping is free. Applicable taxes are not configured in this test checkout.
+            Standard shipping is free. Taxes are not included in this estimate.
           </p>
           <div className="my-5 border-t border-slate-100" />
           <div className="flex justify-between text-base font-bold text-slate-900">

@@ -2,7 +2,7 @@ import ProductSection from "../components/ProductSection";
 
 export default function ShopPage({ products, cartQuantities, onAdd }) {
   return (
-    <main className="container-wide pb-24 pt-8 sm:py-8">
+    <main className="container-wide pb-24 pt-8 sm:pt-8">
       <div className="mb-6 rounded-2xl bg-linear-to-r from-blue-700 to-sky-600 px-6 py-8 text-white shadow-lg">
         <p className="text-xs font-bold uppercase tracking-[0.28em] text-blue-100">
           Shop collection

@@ -87,7 +87,7 @@ function HomePage({
         </div>
       )}
 
-      <main className="container-wide space-y-4 pb-24 sm:pb-0">
+      <main className="container-wide space-y-4 pb-24">
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_190px]">
           <ProductSection
             title="Premium Products"
@@ -108,6 +108,7 @@ function HomePage({
           cartQuantities={cartQuantities}
           onAdd={addToCart}
           columns={6}
+          deferred
         />
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(300px,.8fr)_1.5fr]">
@@ -117,6 +118,7 @@ function HomePage({
             cartQuantities={cartQuantities}
             onAdd={addToCart}
             columns={2}
+            deferred
           />
 
           <TopSelling />
@@ -139,7 +141,7 @@ export default function App() {
     }
   }, [cart]);
 
-  const addToCart = (product) => {
+  const addToCart = useCallback((product) => {
     setCart((current) => {
       const existing = current.find((item) => item.id === product.id);
       if (existing) {
@@ -152,22 +154,22 @@ export default function App() {
       }
       return [...current, { ...product, quantity: 1 }];
     });
-  };
+  }, []);
 
-  const changeCartQuantity = (productId, quantity) => {
+  const changeCartQuantity = useCallback((productId, quantity) => {
     if (!Number.isSafeInteger(quantity) || quantity > MAX_CART_QUANTITY) return;
     setCart((current) =>
       current
         .map((item) => item.id === productId ? { ...item, quantity } : item)
         .filter((item) => item.quantity > 0)
     );
-  };
+  }, []);
 
-  const removeFromCart = (productId) => {
+  const removeFromCart = useCallback((productId) => {
     setCart((current) => current.filter((item) => item.id !== productId));
-  };
+  }, []);
 
-  const clearCart = () => setCart([]);
+  const clearCart = useCallback(() => setCart([]), []);
 
   const filterProducts = useCallback((products) => {
     return products.filter((product) =>
@@ -222,6 +224,7 @@ export default function App() {
         cartCount={cartCount}
         search={search}
         setSearch={setSearch}
+        products={allProducts}
       />
 
       <CategoryNav
@@ -357,6 +360,34 @@ export default function App() {
                 {
                   title: "Location",
                   text: "Online retail support for shoppers across the country and beyond."
+                }
+              ]}
+            />
+          }
+        />
+
+        <Route
+          path="/vendor"
+          element={
+            <InfoPage
+              title="Become a Flipmart vendor"
+              description="Bring your products to a growing community of shoppers. Share a few details about your business and our partner team will help you get started."
+              items={[
+                {
+                  title: "Tell us about your store",
+                  text: "Introduce your business, product range, and the customers you serve."
+                },
+                {
+                  title: "Prepare your catalog",
+                  text: "Organize clear product photos, descriptions, pricing, and inventory details."
+                },
+                {
+                  title: "Set up fulfillment",
+                  text: "Choose how you will package, ship, and support orders placed through Flipmart."
+                },
+                {
+                  title: "Talk to our team",
+                  text: "Contact hello@flipmart.example to discuss onboarding and next steps."
                 }
               ]}
             />

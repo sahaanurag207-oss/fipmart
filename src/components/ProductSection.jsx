@@ -1,8 +1,9 @@
+import { memo } from "react";
 import { Check, Heart, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { MAX_CART_QUANTITY } from "../data";
 
-function ProductCard({ product, quantity, onAdd }) {
+const ProductCard = memo(function ProductCard({ product, quantity, onAdd }) {
   const maxQuantityReached = quantity >= MAX_CART_QUANTITY;
 
   return (
@@ -15,13 +16,16 @@ function ProductCard({ product, quantity, onAdd }) {
         <Heart size={16} />
       </button>
 
-      <div className="flex h-36.25 items-center justify-center overflow-hidden bg-white sm:h-41.25">
+      <div className="aspect-[4/3] w-full overflow-hidden bg-slate-100">
 
         <img
           src={product.image}
           alt={product.name}
+          width="400"
+          height="300"
           loading="lazy"
-          className="h-full w-full object-contain transition duration-300 group-hover:scale-105"
+          decoding="async"
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
 
       </div>
@@ -53,7 +57,7 @@ function ProductCard({ product, quantity, onAdd }) {
         disabled={maxQuantityReached}
         onClick={() => onAdd(product)}
         aria-label={`${maxQuantityReached ? "Maximum quantity reached for" : "Add"} ${product.name} to cart`}
-        className="mt-3 flex min-h-11 items-center justify-center gap-2 rounded-md bg-slate-900 py-2 text-xs font-semibold text-white opacity-100 transition hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 disabled:cursor-not-allowed disabled:opacity-50 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+        className="mt-3 flex min-h-11 items-center justify-center gap-2 rounded-md bg-slate-900 py-2 text-xs font-semibold text-white opacity-100 transition-opacity hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 disabled:cursor-not-allowed disabled:opacity-50 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
       >
         <ShoppingCart size={14} />
         {maxQuantityReached ? "Maximum quantity reached" : quantity > 0 ? "Add another" : "Add to cart"}
@@ -71,14 +75,15 @@ function ProductCard({ product, quantity, onAdd }) {
 
     </article>
   );
-}
+});
 
-export default function ProductSection({
+function ProductSection({
   title,
   products,
   cartQuantities = {},
   onAdd,
-  columns = 5
+  columns = 5,
+  deferred = false
 }) {
 
   const gridColumns = {
@@ -88,7 +93,7 @@ export default function ProductSection({
   }[columns] || "lg:grid-cols-5";
 
   return (
-    <section className="section-panel p-4 sm:p-5">
+    <section className={`section-panel p-4 sm:p-5${deferred ? " deferred-content" : ""}`}>
 
       <div className="mb-4 flex items-center justify-between">
 
@@ -124,3 +129,5 @@ export default function ProductSection({
     </section>
   );
 }
+
+export default memo(ProductSection);

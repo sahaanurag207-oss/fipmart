@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Link } from "react-router-dom";
 
 import {
@@ -6,9 +7,9 @@ import {
   Send
 } from "lucide-react";
 
-export default function Footer() {
+function Footer() {
   return (
-    <footer className="mt-8 bg-slate-950 pb-20 text-slate-300 sm:pb-0">
+    <footer className="deferred-content mt-8 bg-slate-950 pb-24 text-slate-300">
 
       <div className="container-wide grid grid-cols-1 gap-8 py-10 sm:grid-cols-2 lg:grid-cols-4">
 
@@ -92,3 +93,5 @@ export default function Footer() {
     </footer>
   );
 }
+
+export default memo(Footer);

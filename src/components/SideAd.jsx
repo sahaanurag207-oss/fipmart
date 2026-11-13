@@ -1,6 +1,7 @@
+import { memo } from "react";
 import { Plane } from "lucide-react";
 
-export default function SideAd() {
+function SideAd() {
   return (
     <aside className="relative flex min-h-75 flex-col items-center justify-center overflow-hidden bg-blue-800 px-4 py-7 text-center text-white">
 
@@ -32,3 +33,5 @@ export default function SideAd() {
     </aside>
   );
 }
+
+export default memo(SideAd);

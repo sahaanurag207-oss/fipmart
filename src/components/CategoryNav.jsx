@@ -1,8 +1,8 @@
-import { useRef } from "react";
+import { memo, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { categories } from "../data";
 
-export default function CategoryNav({
+function CategoryNav({
   activeCategory,
   setActiveCategory
 }) {
@@ -43,7 +43,7 @@ export default function CategoryNav({
                     : category.name
                 )
               }
-              className={`group flex w-[110px] shrink-0 snap-start flex-col items-center gap-2 rounded-lg px-1 py-1 text-center text-[11px] font-semibold transition ${
+              className={`group flex w-[110px] shrink-0 snap-start flex-col items-center gap-2 rounded-lg px-1 py-1 text-center text-[11px] font-semibold transition-colors ${
                 activeCategory === category.name
                   ? "text-blue-700"
                   : "text-slate-600 hover:text-blue-700"
@@ -51,7 +51,7 @@ export default function CategoryNav({
             >
 
               <span
-                className={`h-15.5 w-15.5 overflow-hidden rounded-xl bg-slate-100 ring-2 ring-transparent transition group-hover:ring-blue-200 ${
+                className={`h-15.5 w-15.5 overflow-hidden rounded-xl bg-slate-100 ring-2 ring-transparent group-hover:ring-blue-200 ${
                   activeCategory === category.name
                     ? "ring-blue-600"
                     : ""
@@ -60,7 +60,10 @@ export default function CategoryNav({
                 <img
                   src={category.image}
                   alt={category.name}
+                  width="96"
+                  height="96"
                   loading="lazy"
+                  decoding="async"
                   className="h-full w-full object-cover"
                 />
               </span>
@@ -87,3 +90,5 @@ export default function CategoryNav({
     </nav>
   );
 }
+
+export default memo(CategoryNav);

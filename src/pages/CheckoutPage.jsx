@@ -1,8 +1,31 @@
 import { useNavigate, Link } from "react-router-dom";
-import { ArrowRight, Info } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 function formatPrice(price) {
   return `$${price.toFixed(2)}`;
+}
+
+function CheckoutField({
+  label,
+  name,
+  type = "text",
+  autoComplete,
+  required = true
+}) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 block text-sm font-medium text-slate-700">
+        {label}
+      </span>
+      <input
+        name={name}
+        type={type}
+        autoComplete={autoComplete}
+        required={required}
+        className="h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+      />
+    </label>
+  );
 }
 
 export default function CheckoutPage({ cart, subtotal }) {
@@ -10,7 +33,7 @@ export default function CheckoutPage({ cart, subtotal }) {
 
   if (cart.length === 0) {
     return (
-      <main className="container-wide pb-24 pt-10 sm:py-14">
+      <main className="container-wide pb-24 pt-10 sm:pt-14">
         <section className="mx-auto max-w-2xl rounded-3xl border border-slate-200 bg-white px-6 py-10 text-center shadow-sm">
           <h1 className="text-2xl font-black text-slate-900">Nothing to check out yet</h1>
           <p className="mt-3 text-sm text-slate-600">Add a product to your cart before continuing.</p>
@@ -22,40 +45,70 @@ export default function CheckoutPage({ cart, subtotal }) {
     );
   }
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    navigate("/checkout/success", {
+      state: { shippingDetails: Object.fromEntries(formData.entries()) }
+    });
+  };
+
   return (
-    <main className="container-wide pb-24 pt-8 sm:py-10">
+    <main className="container-wide pb-24 pt-8 sm:pt-10">
       <div className="mb-6">
-        <p className="text-xs font-bold uppercase tracking-[0.24em] text-blue-700">Demo checkout</p>
-        <h1 className="mt-2 text-3xl font-black text-slate-900 sm:text-4xl">Review your cart</h1>
-        <p className="mt-2 text-sm text-slate-600">This storefront demo does not collect payment or delivery details.</p>
+        <Link to="/cart" className="text-sm font-semibold text-blue-700 hover:underline">
+          Back to cart
+        </Link>
+        <h1 className="mt-3 text-3xl font-black text-slate-900 sm:text-4xl">
+          Checkout
+        </h1>
+        <p className="mt-2 text-sm text-slate-600">
+          Enter your contact and delivery details to continue.
+        </p>
       </div>
 
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
-        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
-          <div className="flex items-start gap-3">
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-blue-50 text-blue-700">
-              <Info size={20} />
-            </span>
-            <div>
-              <h2 className="font-bold text-slate-900">Demo only</h2>
-              <p className="mt-1 text-sm leading-6 text-slate-600">
-                Continuing shows a demo confirmation. No payment is processed and no order is submitted.
-              </p>
+        <form
+          onSubmit={handleSubmit}
+          className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7"
+        >
+          <section aria-labelledby="contact-heading">
+            <h2 id="contact-heading" className="text-lg font-bold text-slate-900">
+              Contact information
+            </h2>
+            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <CheckoutField label="Email address" name="email" type="email" autoComplete="email" />
+              <CheckoutField label="Phone number (optional)" name="phone" type="tel" autoComplete="tel" required={false} />
             </div>
-          </div>
+          </section>
+
+          <section aria-labelledby="delivery-heading" className="mt-8 border-t border-slate-100 pt-6">
+            <h2 id="delivery-heading" className="text-lg font-bold text-slate-900">
+              Delivery address
+            </h2>
+            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <CheckoutField label="Full name" name="fullName" autoComplete="name" />
+              <CheckoutField label="Country or region" name="country" autoComplete="country-name" />
+              <div className="sm:col-span-2">
+                <CheckoutField label="Street address" name="address" autoComplete="street-address" />
+              </div>
+              <CheckoutField label="City" name="city" autoComplete="address-level2" />
+              <CheckoutField label="State or province" name="region" autoComplete="address-level1" />
+              <CheckoutField label="Postal code" name="postalCode" autoComplete="postal-code" />
+            </div>
+          </section>
 
           <button
-            type="button"
-            onClick={() => navigate("/checkout/success")}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-700 px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-blue-800 sm:w-auto"
+            type="submit"
+            className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-700 px-5 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 sm:w-auto"
           >
-            View demo confirmation
+            Continue to payment
             <ArrowRight size={16} />
           </button>
-        </section>
+        </form>
 
         <aside className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-          <h2 className="text-lg font-bold text-slate-900">Cart summary</h2>
+          <h2 className="text-lg font-bold text-slate-900">Order summary</h2>
           <ul className="mt-4 divide-y divide-slate-100">
             {cart.map((item) => (
               <li key={item.id} className="flex items-center justify-between gap-3 py-3">
@@ -83,12 +136,9 @@ export default function CheckoutPage({ cart, subtotal }) {
               <span>{formatPrice(subtotal)}</span>
             </div>
             <p className="mt-3 text-xs leading-5 text-slate-500">
-              Demo prices are shown in USD. No payment will be taken.
+              Taxes are not included in this estimate.
             </p>
           </div>
-          <Link to="/cart" className="mt-5 inline-block text-sm font-semibold text-blue-700 hover:underline">
-            Back to cart
-          </Link>
         </aside>
       </div>
     </main>

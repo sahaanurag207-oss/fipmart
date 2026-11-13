@@ -1,14 +1,18 @@
+import { memo } from "react";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
-export default function TopSelling() {
+function TopSelling() {
   return (
     <section className="relative flex min-h-67.5 items-center overflow-hidden bg-[#e9e2d4]">
 
       <img
         src="/images/photo-1515886657613-9f3515b0c78f.webp"
         alt="Fashion collection"
+        width="900"
+        height="600"
         loading="lazy"
+        decoding="async"
         className="absolute inset-0 h-full w-full object-cover object-center"
       />
 
@@ -38,3 +42,5 @@ export default function TopSelling() {
     </section>
   );
 }
+
+export default memo(TopSelling);

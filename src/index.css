@@ -49,13 +49,33 @@ img {
 }
 
 .product-card {
-  transition: transform 0.2s ease,
-    box-shadow 0.2s ease;
+  position: relative;
+  isolation: isolate;
+  transition: transform 0.2s ease;
+}
+
+.product-card::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
 }
 
 .product-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+.product-card:hover::after {
+  opacity: 1;
+}
+
+.deferred-content {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 440px;
 }
 
 .hide-scrollbar {

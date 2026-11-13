@@ -65,7 +65,7 @@ export const premiumProducts = [
   {
     id: 3,
     name: "4K Smart Television",
-    price: 79,
+    price: 499,
     oldPrice: null,
     image: "/images/photo-1593359677879-a4bb92f829d1.webp",
     categories: ["Electronics"],
