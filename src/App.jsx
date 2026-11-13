@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 
 import Header from "./components/Header";
 import CategoryNav from "./components/CategoryNav";
@@ -192,6 +192,7 @@ function HomePage({
 }
 
 export default function App() {
+  const location = useLocation();
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState(loadCart);
   const [wishlistIds, setWishlistIds] = useState(loadWishlist);
@@ -338,6 +339,7 @@ export default function App() {
         setActiveCategory={setActiveCategory}
       />
 
+      <div key={`${location.pathname}${location.search}`} className="page-transition">
       <Routes>
         <Route
           path="/"
@@ -624,6 +626,7 @@ export default function App() {
           }
         />
       </Routes>
+      </div>
 
       <Footer />
 
