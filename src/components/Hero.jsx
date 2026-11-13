@@ -165,8 +165,17 @@ function Hero() {
                     : "pointer-events-none z-0 translate-x-4 opacity-0"
                 }`}
               >
-                {slide.images.map((image) => (
-                  <div key={image.id} className={image.wrapper}>
+                {slide.images.map((image, imageIndex) => (
+                  <div
+                    key={image.id}
+                    className={`${image.wrapper} transition-[opacity,transform] duration-700 ease-out motion-reduce:transition-none ${
+                      isActive
+                        ? "translate-x-0 opacity-100"
+                        : imageIndex === 0
+                          ? "translate-x-10 opacity-0"
+                          : "-translate-x-10 opacity-0"
+                    } ${imageIndex > 0 ? "delay-100" : ""}`}
+                  >
                     {!loadedImages[image.id] && (
                       <div aria-hidden="true" className="absolute inset-3 animate-pulse rounded-3xl bg-white/20" />
                     )}
