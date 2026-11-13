@@ -1,7 +1,9 @@
-import { memo } from "react";
+import { lazy, memo, Suspense, useCallback, useState } from "react";
 import { Check, Heart, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { MAX_CART_QUANTITY } from "../data";
+
+const ProductQuickView = lazy(() => import("./ProductQuickView"));
 
 const ProductCard = memo(function ProductCard({
   product,
@@ -10,7 +12,9 @@ const ProductCard = memo(function ProductCard({
   onAdd,
   onToggleWishlist
 }) {
+  const [quickViewOpen, setQuickViewOpen] = useState(false);
   const maxQuantityReached = quantity >= MAX_CART_QUANTITY;
+  const closeQuickView = useCallback(() => setQuickViewOpen(false), []);
 
   return (
     <article className="product-card group relative flex min-w-0 flex-col border border-slate-200 bg-white p-3">
@@ -27,41 +31,38 @@ const ProductCard = memo(function ProductCard({
         <Heart size={16} fill={wishlisted ? "currentColor" : "none"} />
       </button>
 
-      <div className="aspect-4/3 w-full overflow-hidden bg-slate-100">
-
-        <img
-          src={product.image}
-          alt={product.name}
-          width="400"
-          height="300"
-          loading="lazy"
-          decoding="async"
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-        />
-
-      </div>
-
-      <div className="mt-3 text-center">
-
-        <p className="truncate text-xs font-medium text-slate-600">
-          {product.name}
-        </p>
-
-        <div className="mt-1 flex items-center justify-center gap-2 text-sm font-bold text-slate-900">
-
-          <span>
-            ${product.price.toFixed(2)}
-          </span>
-
-          {product.oldPrice && (
-            <span className="text-xs font-normal text-slate-400 line-through">
-              ${product.oldPrice.toFixed(2)}
-            </span>
-          )}
-
+      <button
+        type="button"
+        onClick={() => setQuickViewOpen(true)}
+        aria-label={`Quick view ${product.name}`}
+        className="block w-full cursor-pointer rounded text-center text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+      >
+        <div className="aspect-4/3 w-full overflow-hidden bg-slate-100">
+          <img
+            src={product.image}
+            alt=""
+            width="400"
+            height="300"
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
         </div>
 
-      </div>
+        <div className="mt-3">
+          <p className="truncate text-xs font-medium text-slate-600">
+            {product.name}
+          </p>
+          <div className="mt-1 flex items-center justify-center gap-2 text-sm font-bold text-slate-900">
+            <span>${product.price.toFixed(2)}</span>
+            {product.oldPrice && (
+              <span className="text-xs font-normal text-slate-400 line-through">
+                ${product.oldPrice.toFixed(2)}
+              </span>
+            )}
+          </div>
+        </div>
+      </button>
 
       <button
         type="button"
@@ -82,6 +83,19 @@ const ProductCard = memo(function ProductCard({
           <Check size={14} aria-hidden="true" />
           Added to cart · Qty {quantity}
         </p>
+      )}
+
+      {quickViewOpen && (
+        <Suspense fallback={null}>
+          <ProductQuickView
+            product={product}
+            quantity={quantity}
+            wishlisted={wishlisted}
+            onAdd={onAdd}
+            onToggleWishlist={onToggleWishlist}
+            onClose={closeQuickView}
+          />
+        </Suspense>
       )}
 
     </article>
