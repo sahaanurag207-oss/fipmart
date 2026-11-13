@@ -16,6 +16,8 @@ import CheckoutResultPage from "./pages/CheckoutResultPage";
 import FloatingCart from "./components/FloatingCart";
 
 import {
+  MAX_CART_QUANTITY,
+  matchesCategory,
   premiumProducts,
   womenProducts,
   menProducts
@@ -31,7 +33,7 @@ function loadCart() {
       throw new TypeError("Saved cart data must be an array.");
     }
 
-    return parsedCart
+    return normalizeCart(parsedCart
       .filter((item) =>
         item &&
         Number.isSafeInteger(item.id) &&
@@ -41,17 +43,25 @@ function loadCart() {
         item.price >= 0 &&
         Number.isSafeInteger(item.quantity) &&
         item.quantity > 0
-      );
+      ));
   } catch (error) {
     console.error("Could not restore the saved cart.", error);
     return [];
   }
 }
 
+function normalizeCart(cart) {
+  return cart.map((item) => ({
+    ...item,
+    quantity: Math.min(item.quantity, MAX_CART_QUANTITY),
+  }));
+}
+
 function HomePage({
   premium,
   women,
   men,
+  cartQuantities,
   activeCategory,
   setActiveCategory,
   addToCart
@@ -82,6 +92,7 @@ function HomePage({
           <ProductSection
             title="Premium Products"
             products={premium}
+            cartQuantities={cartQuantities}
             onAdd={addToCart}
             columns={5}
           />
@@ -94,6 +105,7 @@ function HomePage({
         <ProductSection
           title="Clothing and Girls Collections"
           products={women}
+          cartQuantities={cartQuantities}
           onAdd={addToCart}
           columns={6}
         />
@@ -102,6 +114,7 @@ function HomePage({
           <ProductSection
             title="Men's Fashion"
             products={men}
+            cartQuantities={cartQuantities}
             onAdd={addToCart}
             columns={2}
           />
@@ -130,6 +143,7 @@ export default function App() {
     setCart((current) => {
       const existing = current.find((item) => item.id === product.id);
       if (existing) {
+        if (existing.quantity >= MAX_CART_QUANTITY) return current;
         return current.map((item) =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
@@ -141,6 +155,7 @@ export default function App() {
   };
 
   const changeCartQuantity = (productId, quantity) => {
+    if (!Number.isSafeInteger(quantity) || quantity > MAX_CART_QUANTITY) return;
     setCart((current) =>
       current
         .map((item) => item.id === productId ? { ...item, quantity } : item)
@@ -156,11 +171,10 @@ export default function App() {
 
   const filterProducts = useCallback((products) => {
     return products.filter((product) =>
-      product.name
-        .toLowerCase()
-        .includes(search.toLowerCase())
+      product.name.toLowerCase().includes(search.toLowerCase()) &&
+      matchesCategory(product, activeCategory)
     );
-  }, [search]);
+  }, [activeCategory, search]);
 
   const premium = useMemo(
     () => filterProducts(premiumProducts),
@@ -189,6 +203,11 @@ export default function App() {
 
   const cartCount = useMemo(
     () => cart.reduce((total, item) => total + item.quantity, 0),
+    [cart]
+  );
+
+  const cartQuantities = useMemo(
+    () => Object.fromEntries(cart.map((item) => [item.id, item.quantity])),
     [cart]
   );
 
@@ -222,6 +241,7 @@ export default function App() {
               premium={premium}
               women={women}
               men={men}
+              cartQuantities={cartQuantities}
               activeCategory={activeCategory}
               setActiveCategory={setActiveCategory}
               addToCart={addToCart}
@@ -231,7 +251,13 @@ export default function App() {
 
         <Route
           path="/shop"
-          element={<ShopPage products={shopProducts} onAdd={addToCart} />}
+          element={
+            <ShopPage
+              products={shopProducts}
+              cartQuantities={cartQuantities}
+              onAdd={addToCart}
+            />
+          }
         />
 
         <Route

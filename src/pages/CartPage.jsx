@@ -1,5 +1,6 @@
 import { ArrowRight, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
+import { MAX_CART_QUANTITY } from "../data";
 
 function formatPrice(price) {
   return `$${price.toFixed(2)}`;
@@ -109,9 +110,10 @@ export default function CartPage({
                     </span>
                     <button
                       type="button"
+                      disabled={item.quantity >= MAX_CART_QUANTITY}
                       onClick={() => onChangeQuantity(item.id, item.quantity + 1)}
                       aria-label={`Increase ${item.name} quantity`}
-                      className="grid h-11 w-11 place-items-center text-slate-600 hover:text-blue-700 sm:h-9 sm:w-9"
+                      className="grid h-11 w-11 place-items-center text-slate-600 hover:text-blue-700 disabled:cursor-not-allowed disabled:text-slate-300 sm:h-9 sm:w-9"
                     >
                       <Plus size={14} />
                     </button>

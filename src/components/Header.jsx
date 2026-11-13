@@ -24,7 +24,7 @@ export default function Header({
       <div className="container-wide flex h-19 items-center gap-2 max-[360px]:gap-1 min-[400px]:gap-4 md:gap-5">
 
         <button
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-lg text-slate-700 hover:bg-slate-100 max-[360px]:h-10 max-[360px]:w-10 max-[280px]:h-6 max-[280px]:w-6 md:hidden"
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-lg text-slate-700 hover:bg-slate-100 max-[280px]:h-6 max-[280px]:w-6 md:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileOpen}
@@ -34,7 +34,7 @@ export default function Header({
 
         <Link
           to="/"
-          className="flex shrink-0 items-center gap-2 text-[25px] font-black tracking-tight text-blue-700 max-[360px]:gap-1 max-[360px]:text-lg"
+          className="flex shrink-0 items-center gap-2 text-[25px] font-black tracking-tight text-blue-700 max-[360px]:gap-1 max-[360px]:text-base"
         >
           <span className="grid h-9 w-9 place-items-center rounded-lg bg-amber-300 text-xl">
             🛍️
@@ -67,7 +67,7 @@ export default function Header({
         <div className="ml-auto flex items-center gap-2 text-slate-600 max-[360px]:gap-1 min-[400px]:gap-4">
 
           <button
-            className="grid h-11 w-11 shrink-0 place-items-center rounded-lg hover:bg-slate-100 max-[360px]:h-10 max-[360px]:w-10 max-[280px]:h-[22px] max-[280px]:w-[22px] md:hidden"
+            className="grid h-11 w-11 shrink-0 place-items-center rounded-lg hover:bg-slate-100 max-[280px]:h-5.5 max-[280px]:w-5.5 md:hidden"
             aria-label="Search"
             aria-expanded={mobileSearchOpen}
             onClick={() => setMobileSearchOpen((open) => !open)}
@@ -86,7 +86,7 @@ export default function Header({
           <Link
             to="/cart"
             aria-label={`Shopping cart, ${cartCount} items`}
-            className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full hover:bg-slate-100 hover:text-blue-700 max-[360px]:h-10 max-[360px]:w-10 max-[280px]:h-[22px] max-[280px]:w-[22px]"
+            className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full hover:bg-slate-100 hover:text-blue-700 max-[280px]:h-[22px] max-[280px]:w-[22px]"
           >
             <ShoppingBag size={22} />
 

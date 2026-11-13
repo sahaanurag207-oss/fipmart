@@ -1,3 +1,5 @@
+export const MAX_CART_QUANTITY = 99;
+
 export const categories = [
   {
     name: "Accessories",
@@ -48,6 +50,7 @@ export const premiumProducts = [
     price: 89,
     oldPrice: null,
     image: "https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=600&q=85",
+    categories: ["Electronics"],
     tag: "Office"
   },
   {
@@ -56,6 +59,7 @@ export const premiumProducts = [
     price: 127,
     oldPrice: 155,
     image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600&q=85",
+    categories: ["Cameras", "Electronics"],
     tag: "Photography"
   },
   {
@@ -64,6 +68,7 @@ export const premiumProducts = [
     price: 79,
     oldPrice: null,
     image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=600&q=85",
+    categories: ["Electronics"],
     tag: "Electronics"
   },
   {
@@ -72,6 +77,7 @@ export const premiumProducts = [
     price: 45,
     oldPrice: 65,
     image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=600&q=85",
+    categories: ["Accessories"],
     tag: "Home"
   },
   {
@@ -80,6 +86,7 @@ export const premiumProducts = [
     price: 99,
     oldPrice: 109,
     image: "https://images.unsplash.com/photo-1592840496694-26d035b52b48?w=600&q=85",
+    categories: ["Accessories", "Electronics"],
     tag: "Gaming"
   }
 ];
@@ -90,42 +97,48 @@ export const womenProducts = [
     name: "Golden Summer Dress",
     price: 80,
     oldPrice: 100,
-    image: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&q=85"
+    image: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&q=85",
+    categories: ["Clothing"]
   },
   {
     id: 7,
     name: "Red Evening Gown",
     price: 142,
     oldPrice: 160,
-    image: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=600&q=85"
+    image: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=600&q=85",
+    categories: ["Clothing"]
   },
   {
     id: 8,
     name: "Floral Occasion Dress",
     price: 300,
     oldPrice: null,
-    image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&q=85"
+    image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&q=85",
+    categories: ["Clothing"]
   },
   {
     id: 9,
     name: "Pink Party Dress",
     price: 89,
     oldPrice: null,
-    image: "https://images.unsplash.com/photo-1596783074918-c84cb06531ca?w=600&q=85"
+    image: "https://images.unsplash.com/photo-1596783074918-c84cb06531ca?w=600&q=85",
+    categories: ["Clothing"]
   },
   {
     id: 10,
     name: "Red Statement Outfit",
     price: 119,
     oldPrice: null,
-    image: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&q=85"
+    image: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&q=85",
+    categories: ["Clothing"]
   },
   {
     id: 11,
     name: "Mustard Casual Set",
     price: 122,
     oldPrice: null,
-    image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&q=85"
+    image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&q=85",
+    categories: ["Clothing"]
   }
 ];
 
@@ -134,12 +147,22 @@ export const menProducts = [
     id: 12,
     name: "Classic White T-shirt",
     price: 35,
-    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=85"
+    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=85",
+    categories: ["Clothing"]
   },
   {
     id: 13,
     name: "Formal Navy Suit",
     price: 180,
-    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&q=85"
+    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&q=85",
+    categories: ["Clothing"]
   }
 ];
+
+export function matchesCategory(product, category) {
+  if (!category) return true;
+  if (category === "Best Deals") {
+    return product.oldPrice !== null && product.oldPrice > product.price;
+  }
+  return product.categories?.includes(category) ?? false;
+}

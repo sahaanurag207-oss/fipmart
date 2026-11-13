@@ -1,4 +1,9 @@
-import { menProducts, premiumProducts, womenProducts } from "../src/data.js";
+import {
+  MAX_CART_QUANTITY,
+  menProducts,
+  premiumProducts,
+  womenProducts,
+} from "../src/data.js";
 
 const products = new Map(
   [...premiumProducts, ...womenProducts, ...menProducts].map((product) => [
@@ -22,7 +27,7 @@ export function getStripeLineItems(cart) {
       !Number.isSafeInteger(item.id) ||
       !Number.isSafeInteger(item.quantity) ||
       item.quantity < 1 ||
-      item.quantity > 99
+      item.quantity > MAX_CART_QUANTITY
     ) {
       throw new TypeError("Your cart contains an invalid product or quantity.");
     }

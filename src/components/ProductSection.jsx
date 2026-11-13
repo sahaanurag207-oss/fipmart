@@ -1,7 +1,10 @@
 import { Heart, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
+import { MAX_CART_QUANTITY } from "../data";
 
-function ProductCard({ product, onAdd }) {
+function ProductCard({ product, quantity, onAdd }) {
+  const maxQuantityReached = quantity >= MAX_CART_QUANTITY;
+
   return (
     <article className="product-card group relative flex min-w-0 flex-col border border-slate-200 bg-white p-3">
 
@@ -46,11 +49,13 @@ function ProductCard({ product, onAdd }) {
       </div>
 
       <button
+        type="button"
+        disabled={maxQuantityReached}
         onClick={() => onAdd(product)}
-        className="mt-3 flex min-h-11 items-center justify-center gap-2 rounded-md bg-slate-900 py-2 text-xs font-semibold text-white opacity-100 transition hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+        className="mt-3 flex min-h-11 items-center justify-center gap-2 rounded-md bg-slate-900 py-2 text-xs font-semibold text-white opacity-100 transition hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 disabled:cursor-not-allowed disabled:opacity-50 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
       >
         <ShoppingCart size={14} />
-        Add to cart
+        {maxQuantityReached ? "Maximum quantity reached" : "Add to cart"}
       </button>
 
     </article>
@@ -60,6 +65,7 @@ function ProductCard({ product, onAdd }) {
 export default function ProductSection({
   title,
   products,
+  cartQuantities = {},
   onAdd,
   columns = 5
 }) {
@@ -89,7 +95,7 @@ export default function ProductSection({
 
         {products.length === 0 && (
           <p className="col-span-full py-8 text-center text-sm text-slate-500">
-            No products match your search.
+            No products match your search or category.
           </p>
         )}
 
@@ -97,6 +103,7 @@ export default function ProductSection({
           <ProductCard
             key={product.id}
             product={product}
+            quantity={cartQuantities[product.id] || 0}
             onAdd={onAdd}
           />
         ))}
