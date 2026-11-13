@@ -1,6 +1,6 @@
 # Flipmart
 
-Flipmart is a React/Vite storefront with a persistent shopping cart and a checkout interface. Payment processing and order submission are not connected. Product images are served locally from `public/images`.
+Flipmart is a React/Vite storefront with a persistent cart, wishlist, and buyer profile stored in the browser, plus a checkout interface. Payment processing and order submission are not connected. Product images are served locally from `public/images`.
 
 ## Run locally
 

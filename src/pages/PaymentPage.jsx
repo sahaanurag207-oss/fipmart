@@ -63,6 +63,7 @@ export default function PaymentPage({ cart, subtotal }) {
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               to="/checkout"
+              state={state}
               className="rounded-full bg-blue-700 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-800"
             >
               Edit delivery details

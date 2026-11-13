@@ -1,4 +1,4 @@
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
 function formatPrice(price) {
@@ -10,6 +10,7 @@ function CheckoutField({
   name,
   type = "text",
   autoComplete,
+  value = "",
   required = true
 }) {
   return (
@@ -21,6 +22,7 @@ function CheckoutField({
         name={name}
         type={type}
         autoComplete={autoComplete}
+        defaultValue={value}
         required={required}
         className="h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
       />
@@ -28,8 +30,10 @@ function CheckoutField({
   );
 }
 
-export default function CheckoutPage({ cart, subtotal }) {
+export default function CheckoutPage({ cart, subtotal, profile = {} }) {
   const navigate = useNavigate();
+  const { state } = useLocation();
+  const details = state?.shippingDetails ?? profile;
 
   if (cart.length === 0) {
     return (
@@ -77,8 +81,8 @@ export default function CheckoutPage({ cart, subtotal }) {
               Contact information
             </h2>
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <CheckoutField label="Email address" name="email" type="email" autoComplete="email" />
-              <CheckoutField label="Phone number (optional)" name="phone" type="tel" autoComplete="tel" required={false} />
+              <CheckoutField label="Email address" name="email" type="email" autoComplete="email" value={details.email || ""} />
+              <CheckoutField label="Phone number (optional)" name="phone" type="tel" autoComplete="tel" value={details.phone || ""} required={false} />
             </div>
           </section>
 
@@ -87,14 +91,14 @@ export default function CheckoutPage({ cart, subtotal }) {
               Delivery address
             </h2>
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <CheckoutField label="Full name" name="fullName" autoComplete="name" />
-              <CheckoutField label="Country or region" name="country" autoComplete="country-name" />
+              <CheckoutField label="Full name" name="fullName" autoComplete="name" value={details.fullName || ""} />
+              <CheckoutField label="Country or region" name="country" autoComplete="country-name" value={details.country || ""} />
               <div className="sm:col-span-2">
-                <CheckoutField label="Street address" name="address" autoComplete="street-address" />
+                <CheckoutField label="Street address" name="address" autoComplete="street-address" value={details.address || ""} />
               </div>
-              <CheckoutField label="City" name="city" autoComplete="address-level2" />
-              <CheckoutField label="State or province" name="region" autoComplete="address-level1" />
-              <CheckoutField label="Postal code" name="postalCode" autoComplete="postal-code" />
+              <CheckoutField label="City" name="city" autoComplete="address-level2" value={details.city || ""} />
+              <CheckoutField label="State or province" name="region" autoComplete="address-level1" value={details.region || ""} />
+              <CheckoutField label="Postal code" name="postalCode" autoComplete="postal-code" value={details.postalCode || ""} />
             </div>
           </section>
 

@@ -10,6 +10,7 @@ import TopSelling from "./components/TopSelling";
 import Footer from "./components/Footer";
 import ShopPage from "./pages/ShopPage";
 import InfoPage from "./pages/InfoPage";
+import AccountPage from "./pages/AccountPage";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import PaymentPage from "./pages/PaymentPage";
@@ -72,6 +73,41 @@ function loadWishlist() {
   } catch (error) {
     console.error("Could not restore the saved wishlist.", error);
     return [];
+  }
+}
+
+function emptyProfile() {
+  return {
+    fullName: "",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    region: "",
+    postalCode: "",
+    country: ""
+  };
+}
+
+function loadProfile() {
+  try {
+    const savedProfile = localStorage.getItem("flipmart-profile");
+    if (!savedProfile) return emptyProfile();
+
+    const parsedProfile = JSON.parse(savedProfile);
+    if (!parsedProfile || typeof parsedProfile !== "object" || Array.isArray(parsedProfile)) {
+      throw new TypeError("Saved profile data must be an object.");
+    }
+
+    return Object.fromEntries(
+      Object.keys(emptyProfile()).map((key) => [
+        key,
+        typeof parsedProfile[key] === "string" ? parsedProfile[key] : ""
+      ])
+    );
+  } catch (error) {
+    console.error("Could not restore the saved profile.", error);
+    return emptyProfile();
   }
 }
 
@@ -158,6 +194,7 @@ export default function App() {
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState(loadCart);
   const [wishlistIds, setWishlistIds] = useState(loadWishlist);
+  const [profile, setProfile] = useState(loadProfile);
   const [activeCategory, setActiveCategory] = useState("");
 
   useEffect(() => {
@@ -219,6 +256,28 @@ export default function App() {
       current.includes(productId) ? current : [...current, productId]
     );
     setCart((current) => current.filter((item) => item.id !== productId));
+  }, []);
+
+  const saveProfile = useCallback((nextProfile) => {
+    try {
+      localStorage.setItem("flipmart-profile", JSON.stringify(nextProfile));
+      setProfile(nextProfile);
+      return true;
+    } catch (error) {
+      console.error("Could not save the buyer profile on this device.", error);
+      return false;
+    }
+  }, []);
+
+  const clearProfile = useCallback(() => {
+    try {
+      localStorage.removeItem("flipmart-profile");
+      setProfile(emptyProfile());
+      return true;
+    } catch (error) {
+      console.error("Could not clear the buyer profile on this device.", error);
+      return false;
+    }
   }, []);
 
   const filterProducts = useCallback((products) => {
@@ -343,7 +402,13 @@ export default function App() {
 
         <Route
           path="/checkout"
-          element={<CheckoutPage cart={cart} subtotal={cartSubtotal} />}
+          element={
+            <CheckoutPage
+              cart={cart}
+              subtotal={cartSubtotal}
+              profile={profile}
+            />
+          }
         />
 
         <Route
@@ -466,27 +531,12 @@ export default function App() {
         <Route
           path="/account"
           element={
-            <InfoPage
-              title="My account"
-              description="Your wishlist and cart are saved on this device. Account profiles and order history are not connected yet."
-              items={[
-                {
-                  title: "Order history",
-                  text: "Order history will be available when checkout can submit orders."
-                },
-                {
-                  title: "Saved items",
-                  text: "Save favorites to your wishlist and revisit them later on this device."
-                },
-                {
-                  title: "Preferences",
-                  text: "Use product search and category filters to find items that suit you."
-                },
-                {
-                  title: "Fast checkout",
-                  text: "Enter delivery details during checkout; they are not stored in an account."
-                }
-              ]}
+            <AccountPage
+              profile={profile}
+              cartCount={cartCount}
+              wishlistCount={wishlistIds.length}
+              onSaveProfile={saveProfile}
+              onClearProfile={clearProfile}
             />
           }
         />
