@@ -38,7 +38,7 @@ export default function WishlistPage({
           columns={5}
         />
       ) : (
-        <section className="rounded-2xl border border-slate-200 bg-white px-6 py-12 text-center">
+        <section className="hover-surface rounded-2xl border border-slate-200 bg-white px-6 py-12 text-center">
           <p className="text-lg font-bold text-slate-900">Your wishlist is empty</p>
           <p className="mt-2 text-sm text-slate-600">
             Save products with the heart button and they’ll be ready when you are.

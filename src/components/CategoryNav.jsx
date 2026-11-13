@@ -16,7 +16,7 @@ function CategoryNav({
   };
 
   return (
-    <nav className="container-wide my-3 bg-white px-4 py-4 shadow-sm">
+    <nav className="container-wide hover-surface my-3 bg-white px-4 py-4 shadow-sm">
 
       <div className="flex items-center gap-2">
         <button
@@ -43,7 +43,7 @@ function CategoryNav({
                     : category.name
                 )
               }
-              className={`group flex w-27.5 shrink-0 snap-start flex-col items-center gap-2 rounded-lg px-1 py-1 text-center text-[11px] font-semibold transition-colors ${
+              className={`group flex w-27.5 shrink-0 snap-start flex-col items-center gap-2 rounded-lg px-1 py-1 text-center text-[11px] font-semibold transition-[color,transform] duration-200 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:transform-none ${
                 activeCategory === category.name
                   ? "text-blue-700"
                   : "text-slate-600 hover:text-blue-700"
@@ -64,7 +64,7 @@ function CategoryNav({
                   height="96"
                   loading="lazy"
                   decoding="async"
-                  className="h-full w-full object-cover object-center"
+                  className="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                 />
               </span>
 

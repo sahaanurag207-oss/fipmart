@@ -27,7 +27,7 @@ export default function PaymentPage({ cart, subtotal }) {
       </div>
 
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
-        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+        <section className="hover-surface rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
           <div className="flex items-center gap-3">
             <span className="grid h-10 w-10 place-items-center rounded-full bg-blue-50 text-blue-700">
               <CreditCard size={20} />
@@ -38,7 +38,7 @@ export default function PaymentPage({ cart, subtotal }) {
             </div>
           </div>
 
-          <div className="mt-6 rounded-xl border border-slate-200 p-4">
+          <div className="mt-6 rounded-xl border border-slate-200 p-4 transition-transform hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:transform-none">
             <div className="flex items-center gap-3">
               <CreditCard size={20} className="text-slate-500" aria-hidden="true" />
               <div className="flex-1">
@@ -77,7 +77,7 @@ export default function PaymentPage({ cart, subtotal }) {
           </div>
         </section>
 
-        <aside className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+        <aside className="hover-surface rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
           <h2 className="text-lg font-bold text-slate-900">Order summary</h2>
           <ul className="mt-4 divide-y divide-slate-100">
             {cart.map((item) => (

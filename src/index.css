@@ -48,6 +48,36 @@ img {
   border: 1px solid #ececec;
 }
 
+.hover-surface {
+  position: relative;
+  isolation: isolate;
+  transition: transform 180ms ease-out;
+}
+
+.hover-surface::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.1);
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease-out;
+}
+
+.hover-surface:hover {
+  transform: translateY(-2px);
+}
+
+.section-panel.hover-surface:hover {
+  transform: none;
+}
+
+.hover-surface:hover::after {
+  opacity: 1;
+}
+
 .page-transition {
   animation: page-enter 240ms ease-out both;
 }
@@ -65,8 +95,15 @@ img {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .page-transition {
+  .page-transition,
+  .hover-surface,
+  .hover-surface::after {
     animation: none;
+    transition: none;
+  }
+
+  .hover-surface:hover {
+    transform: none;
   }
 }
 

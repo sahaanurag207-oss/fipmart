@@ -45,7 +45,7 @@ export default function ShopPage({
 
   return (
     <main className="container-wide pb-24 pt-8 sm:pt-8">
-      <div className="mb-6 rounded-2xl bg-linear-to-r from-blue-700 to-sky-600 px-6 py-8 text-white shadow-lg">
+      <div className="hover-surface mb-6 rounded-2xl bg-linear-to-r from-blue-700 to-sky-600 px-6 py-8 text-white shadow-lg">
         <p className="text-xs font-bold uppercase tracking-[0.28em] text-blue-100">
           Shop collection
         </p>
@@ -57,7 +57,7 @@ export default function ShopPage({
         </p>
       </div>
 
-      <div className="mb-4 flex flex-wrap items-end justify-between gap-3 rounded-xl border border-slate-200 bg-white p-4">
+      <div className="hover-surface mb-4 flex flex-wrap items-end justify-between gap-3 rounded-xl border border-slate-200 bg-white p-4">
         <p className="text-sm text-slate-600" aria-live="polite">
           Showing <span className="font-semibold text-slate-900">{visibleProducts.length}</span> products
           {categoryFilter && <span> in {categoryFilter}</span>}

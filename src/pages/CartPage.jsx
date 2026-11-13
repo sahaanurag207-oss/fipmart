@@ -20,7 +20,7 @@ export default function CartPage({
   if (cart.length === 0) {
     return (
       <main className="container-wide py-10 sm:py-14">
-        <section className="mx-auto max-w-3xl rounded-3xl border border-slate-200 bg-white px-6 py-12 text-center shadow-sm sm:px-10">
+        <section className="hover-surface mx-auto max-w-3xl rounded-3xl border border-slate-200 bg-white px-6 py-12 text-center shadow-sm sm:px-10">
           <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-blue-50 text-blue-700">
             <ShoppingBag size={28} />
           </span>
@@ -64,7 +64,7 @@ export default function CartPage({
       </div>
 
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
-        <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <section className="hover-surface overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="hidden grid-cols-[minmax(0,1fr)_120px_100px] gap-4 border-b border-slate-100 px-6 py-4 text-xs font-bold uppercase tracking-wide text-slate-500 sm:grid">
             <span>Product</span>
             <span className="text-center">Quantity</span>
@@ -163,7 +163,7 @@ export default function CartPage({
           </div>
         </section>
 
-        <aside className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+        <aside className="hover-surface rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
           <h2 className="text-lg font-bold text-slate-900">Order summary</h2>
           <div className="mt-5 flex justify-between text-sm text-slate-600">
             <span>Subtotal</span>

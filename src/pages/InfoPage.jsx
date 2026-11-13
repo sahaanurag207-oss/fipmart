@@ -8,7 +8,7 @@ export default function InfoPage({
 }) {
   return (
     <main className="container-wide py-8">
-      <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+      <section className="hover-surface rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         <p className="text-xs font-bold uppercase tracking-[0.28em] text-blue-700">
           Flipmart
         </p>
@@ -23,7 +23,7 @@ export default function InfoPage({
 
         <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
           {items.map((item) => (
-            <div key={item.title} className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+            <div key={item.title} className="rounded-2xl border border-slate-200 bg-slate-50 p-5 transition-transform hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:transform-none">
               <h2 className="text-lg font-bold text-slate-900">{item.title}</h2>
               <p className="mt-2 text-sm leading-6 text-slate-600">{item.text}</p>
             </div>

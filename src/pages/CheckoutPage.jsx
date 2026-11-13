@@ -38,7 +38,7 @@ export default function CheckoutPage({ cart, subtotal, profile = {} }) {
   if (cart.length === 0) {
     return (
       <main className="container-wide pb-24 pt-10 sm:pt-14">
-        <section className="mx-auto max-w-2xl rounded-3xl border border-slate-200 bg-white px-6 py-10 text-center shadow-sm">
+        <section className="hover-surface mx-auto max-w-2xl rounded-3xl border border-slate-200 bg-white px-6 py-10 text-center shadow-sm">
           <h1 className="text-2xl font-black text-slate-900">Nothing to check out yet</h1>
           <p className="mt-3 text-sm text-slate-600">Add a product to your cart before continuing.</p>
           <Link to="/shop" className="mt-6 inline-flex rounded-full bg-blue-700 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-800">
@@ -74,7 +74,7 @@ export default function CheckoutPage({ cart, subtotal, profile = {} }) {
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
         <form
           onSubmit={handleSubmit}
-          className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7"
+          className="hover-surface rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7"
         >
           <section aria-labelledby="contact-heading">
             <h2 id="contact-heading" className="text-lg font-bold text-slate-900">
@@ -106,7 +106,7 @@ export default function CheckoutPage({ cart, subtotal, profile = {} }) {
             <h2 id="shipping-method-heading" className="text-lg font-bold text-slate-900">
               Delivery method
             </h2>
-            <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-xl border border-blue-200 bg-blue-50/60 p-4">
+            <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-xl border border-blue-200 bg-blue-50/60 p-4 transition-transform hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:transform-none">
               <input
                 type="radio"
                 name="shippingMethod"
@@ -131,7 +131,7 @@ export default function CheckoutPage({ cart, subtotal, profile = {} }) {
           </button>
         </form>
 
-        <aside className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+        <aside className="hover-surface rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
           <h2 className="text-lg font-bold text-slate-900">Order summary</h2>
           <ul className="mt-4 divide-y divide-slate-100">
             {cart.map((item) => (

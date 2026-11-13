@@ -151,7 +151,7 @@ function ProductSection({
   }[columns] || "lg:grid-cols-5";
 
   return (
-    <section className={`section-panel p-4 sm:p-5${deferred ? " deferred-content" : ""}`}>
+    <section className={`section-panel hover-surface p-4 sm:p-5${deferred ? " deferred-content" : ""}`}>
 
       <div className="mb-4 flex items-center justify-between">
 
@@ -159,7 +159,7 @@ function ProductSection({
           {title}
         </h2>
 
-        <Link to={shopUrl} className="text-xs font-semibold text-blue-700 hover:underline">
+        <Link to={shopUrl} className="text-xs font-semibold text-blue-700 transition-transform hover:translate-x-1 hover:underline motion-reduce:transition-none motion-reduce:transform-none">
           View all
         </Link>
 

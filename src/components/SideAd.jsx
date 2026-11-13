@@ -3,10 +3,10 @@ import { Plane } from "lucide-react";
 
 function SideAd() {
   return (
-    <aside className="relative flex min-h-75 flex-col items-center justify-center overflow-hidden bg-blue-800 px-4 py-7 text-center text-white">
+    <aside className="group hover-surface relative flex min-h-75 flex-col items-center justify-center overflow-hidden bg-blue-800 px-4 py-7 text-center text-white">
 
       <Plane
-        className="absolute right-2 top-3 rotate-[-18deg] text-white/80"
+        className="absolute right-2 top-3 rotate-[-18deg] text-white/80 transition-transform duration-300 group-hover:-translate-y-1 motion-reduce:transition-none"
         size={54}
       />
 
