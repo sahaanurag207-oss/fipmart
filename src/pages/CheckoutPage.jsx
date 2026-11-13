@@ -48,7 +48,7 @@ export default function CheckoutPage({ cart, subtotal }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    navigate("/checkout/success", {
+    navigate("/checkout/payment", {
       state: { shippingDetails: Object.fromEntries(formData.entries()) }
     });
   };

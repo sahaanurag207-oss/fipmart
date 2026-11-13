@@ -12,7 +12,7 @@ import ShopPage from "./pages/ShopPage";
 import InfoPage from "./pages/InfoPage";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
-import CheckoutResultPage from "./pages/CheckoutResultPage";
+import PaymentPage from "./pages/PaymentPage";
 import FloatingCart from "./components/FloatingCart";
 
 import {
@@ -278,8 +278,8 @@ export default function App() {
         />
 
         <Route
-          path="/checkout/success"
-          element={<CheckoutResultPage />}
+          path="/checkout/payment"
+          element={<PaymentPage cart={cart} subtotal={cartSubtotal} />}
         />
 
         <Route
