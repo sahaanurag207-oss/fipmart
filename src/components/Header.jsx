@@ -57,7 +57,7 @@ function Header({
             setSearch(product.name);
             setSuggestionsOpen(false);
           }}
-          className="block w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50"
+          className="block w-full px-4 py-2 text-left text-sm text-slate-700 transition-transform hover:translate-x-1 hover:bg-slate-50 focus-visible:translate-x-1 focus-visible:outline-2 focus-visible:outline-blue-700 motion-reduce:transition-none motion-reduce:transform-none"
         >
           {product.name}
         </button>
@@ -76,7 +76,7 @@ function Header({
 
         <button
           type="button"
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-lg text-slate-700 hover:bg-slate-100 max-[280px]:h-6 max-[280px]:w-6 md:hidden"
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-lg text-slate-700 transition-transform hover:scale-105 hover:bg-slate-100 active:scale-95 motion-reduce:transition-none motion-reduce:transform-none max-[280px]:h-6 max-[280px]:w-6 md:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileOpen}
@@ -86,7 +86,7 @@ function Header({
 
         <Link
           to="/"
-          className="flex shrink-0 items-center gap-2 text-[25px] font-black tracking-tight text-blue-700 max-[360px]:gap-1 max-[360px]:text-base"
+          className="flex shrink-0 items-center gap-2 text-[25px] font-black tracking-tight text-blue-700 transition-transform hover:scale-[1.02] motion-reduce:transition-none motion-reduce:transform-none max-[360px]:gap-1 max-[360px]:text-base"
         >
           <span className="grid h-9 w-9 place-items-center rounded-lg bg-amber-300 text-xl">
             🛍️
@@ -96,10 +96,10 @@ function Header({
         </Link>
 
         <form
-          className="relative ml-4 hidden flex-1 items-center rounded-md bg-slate-100 px-4 md:flex"
+          className="group relative ml-4 hidden flex-1 items-center rounded-md bg-slate-100 px-4 transition-transform duration-200 hover:-translate-y-0.5 focus-within:-translate-y-0.5 focus-within:ring-2 focus-within:ring-blue-200 motion-reduce:transition-none motion-reduce:transform-none md:flex"
           onSubmit={(e) => e.preventDefault()}
         >
-          <Search size={19} className="text-slate-500" />
+          <Search size={19} className="text-slate-500 transition-transform duration-200 group-hover:scale-110 group-focus-within:scale-110 motion-reduce:transition-none" />
 
           <input
             type="search"
@@ -120,7 +120,7 @@ function Header({
 
         <Link
           to="/vendor"
-          className="hidden shrink-0 rounded-full bg-blue-700 px-6 py-3 text-xs font-semibold text-white transition hover:bg-blue-800 sm:block"
+          className="hidden shrink-0 rounded-full bg-blue-700 px-6 py-3 text-xs font-semibold text-white transition-transform hover:-translate-y-0.5 hover:bg-blue-800 active:scale-[.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 motion-reduce:transition-none motion-reduce:transform-none sm:block"
         >
           Become a Vendor
         </Link>
@@ -130,19 +130,19 @@ function Header({
           <Link
             to="/wishlist"
             aria-label={`Wishlist, ${wishlistCount} saved items`}
-            className="hidden sm:block hover:text-blue-700"
+            className="hidden transition-transform hover:-translate-y-0.5 hover:text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-700 motion-reduce:transition-none motion-reduce:transform-none sm:block"
           >
             <Heart size={22} />
           </Link>
 
-          <Link to="/account" aria-label="Account" className="hidden sm:block hover:text-blue-700">
+          <Link to="/account" aria-label="Account" className="hidden transition-transform hover:-translate-y-0.5 hover:text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-700 motion-reduce:transition-none motion-reduce:transform-none sm:block">
             <UserRound size={22} />
           </Link>
 
           <Link
             to="/cart"
             aria-label={`Shopping cart, ${cartCount} item${cartCount === 1 ? "" : "s"}`}
-            className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full hover:bg-slate-100 hover:text-blue-700 max-[280px]:h-5.5 max-[280px]:w-5.5"
+            className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full transition-transform hover:-translate-y-0.5 hover:bg-slate-100 hover:text-blue-700 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 motion-reduce:transition-none motion-reduce:transform-none max-[280px]:h-5.5 max-[280px]:w-5.5"
           >
             <ShoppingBag size={22} />
 
@@ -155,10 +155,10 @@ function Header({
       </div>
 
       <form
-        className="container-wide relative mb-3 flex items-center gap-3 rounded-lg bg-slate-100 px-4 py-2.5 md:hidden"
+        className="group container-wide relative mb-3 flex items-center gap-3 rounded-lg bg-slate-100 px-4 py-2.5 transition-transform duration-200 hover:-translate-y-0.5 focus-within:-translate-y-0.5 focus-within:ring-2 focus-within:ring-blue-200 motion-reduce:transition-none motion-reduce:transform-none md:hidden"
         onSubmit={(e) => e.preventDefault()}
       >
-        <Search size={18} className="shrink-0 text-slate-500" />
+        <Search size={18} className="shrink-0 text-slate-500 transition-transform duration-200 group-hover:scale-110 group-focus-within:scale-110 motion-reduce:transition-none" />
         <input
           type="search"
           aria-label="Search products"
@@ -178,10 +178,10 @@ function Header({
 
       {mobileOpen && (
         <nav className="container-wide flex flex-wrap gap-5 border-t border-slate-100 py-4 text-sm font-semibold text-slate-600 md:hidden">
-          <Link to="/shop" onClick={() => setMobileOpen(false)} className="hover:text-blue-700">Shop</Link>
-          <Link to="/wishlist" onClick={() => setMobileOpen(false)} className="hover:text-blue-700">Wishlist</Link>
-          <Link to="/cart" onClick={() => setMobileOpen(false)} className="hover:text-blue-700">Cart</Link>
-          <Link to="/account" onClick={() => setMobileOpen(false)} className="hover:text-blue-700">Account</Link>
+          <Link to="/shop" onClick={() => setMobileOpen(false)} className="transition-transform hover:translate-x-1 hover:text-blue-700 focus-visible:underline motion-reduce:transition-none motion-reduce:transform-none">Shop</Link>
+          <Link to="/wishlist" onClick={() => setMobileOpen(false)} className="transition-transform hover:translate-x-1 hover:text-blue-700 focus-visible:underline motion-reduce:transition-none motion-reduce:transform-none">Wishlist</Link>
+          <Link to="/cart" onClick={() => setMobileOpen(false)} className="transition-transform hover:translate-x-1 hover:text-blue-700 focus-visible:underline motion-reduce:transition-none motion-reduce:transform-none">Cart</Link>
+          <Link to="/account" onClick={() => setMobileOpen(false)} className="transition-transform hover:translate-x-1 hover:text-blue-700 focus-visible:underline motion-reduce:transition-none motion-reduce:transform-none">Account</Link>
         </nav>
       )}
 

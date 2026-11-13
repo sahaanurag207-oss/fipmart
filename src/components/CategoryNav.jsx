@@ -23,7 +23,7 @@ function CategoryNav({
           type="button"
           onClick={() => scrollCategories(-1)}
           aria-label="Scroll categories left"
-          className="hidden h-9 w-9 shrink-0 place-items-center rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 sm:grid 2xl:hidden"
+          className="hidden h-9 w-9 shrink-0 place-items-center rounded-full bg-slate-100 text-slate-700 transition-transform hover:scale-105 hover:bg-slate-200 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 motion-reduce:transition-none motion-reduce:transform-none sm:grid 2xl:hidden"
         >
           <ChevronLeft size={18} />
         </button>
@@ -81,7 +81,7 @@ function CategoryNav({
           type="button"
           onClick={() => scrollCategories(1)}
           aria-label="Scroll categories right"
-          className="hidden h-9 w-9 shrink-0 place-items-center rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 sm:grid 2xl:hidden"
+          className="hidden h-9 w-9 shrink-0 place-items-center rounded-full bg-slate-100 text-slate-700 transition-transform hover:scale-105 hover:bg-slate-200 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 motion-reduce:transition-none motion-reduce:transform-none sm:grid 2xl:hidden"
         >
           <ChevronRight size={18} />
         </button>
