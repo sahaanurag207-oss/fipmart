@@ -49,13 +49,13 @@ export default function Hero() {
           </div>
 
           <img
-            src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=90"
+            src="/images/photo-1584917865442-de89df76afd3.webp"
             alt="Black handbag"
             className="absolute bottom-0 right-[3%] h-[88%] w-[52%] object-contain object-bottom drop-shadow-2xl md:right-[7%] md:w-[48%]"
           />
 
           <img
-            src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500&q=85"
+            src="/images/photo-1590874103328-eac38a683ce7.webp"
             alt="Fashion handbag"
             className="absolute bottom-0 right-0 hidden h-[82%] w-[26%] object-contain object-bottom md:block"
           />

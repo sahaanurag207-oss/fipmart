@@ -1,43 +1,12 @@
-import { useState } from "react";
-import { ArrowRight, LockKeyhole, ShieldCheck } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { ArrowRight, Info } from "lucide-react";
 
 function formatPrice(price) {
   return `$${price.toFixed(2)}`;
 }
 
 export default function CheckoutPage({ cart, subtotal }) {
-  const [isStarting, setIsStarting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const startCheckout = async () => {
-    setIsStarting(true);
-    setErrorMessage("");
-
-    try {
-      const response = await fetch("/api/checkout-sessions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          cart: cart.map(({ id, quantity }) => ({ id, quantity })),
-        }),
-      });
-
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.error || "Checkout could not be started.");
-      }
-
-      if (typeof result.url !== "string" || !result.url.startsWith("https://checkout.stripe.com/")) {
-        throw new Error("The payment provider returned an invalid checkout link.");
-      }
-
-      window.location.assign(result.url);
-    } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "Checkout could not be started.");
-      setIsStarting(false);
-    }
-  };
+  const navigate = useNavigate();
 
   if (cart.length === 0) {
     return (
@@ -56,50 +25,37 @@ export default function CheckoutPage({ cart, subtotal }) {
   return (
     <main className="container-wide pb-24 pt-8 sm:py-10">
       <div className="mb-6">
-        <p className="text-xs font-bold uppercase tracking-[0.24em] text-blue-700">Secure checkout</p>
-        <h1 className="mt-2 text-3xl font-black text-slate-900 sm:text-4xl">Review your order</h1>
-        <p className="mt-2 text-sm text-slate-600">Your payment and address details are entered securely on Stripe.</p>
+        <p className="text-xs font-bold uppercase tracking-[0.24em] text-blue-700">Demo checkout</p>
+        <h1 className="mt-2 text-3xl font-black text-slate-900 sm:text-4xl">Review your cart</h1>
+        <p className="mt-2 text-sm text-slate-600">This storefront demo does not collect payment or delivery details.</p>
       </div>
 
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
           <div className="flex items-start gap-3">
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-emerald-50 text-emerald-700">
-              <ShieldCheck size={20} />
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-blue-50 text-blue-700">
+              <Info size={20} />
             </span>
             <div>
-              <h2 className="font-bold text-slate-900">Payment details stay private</h2>
+              <h2 className="font-bold text-slate-900">Demo only</h2>
               <p className="mt-1 text-sm leading-6 text-slate-600">
-                Flipmart never sees or stores your card number. Stripe securely collects payment and delivery details.
+                Continuing shows a demo confirmation. No payment is processed and no order is submitted.
               </p>
             </div>
           </div>
 
-          <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950">
-            Test mode is enabled. No real payment will be taken. Use Stripe&apos;s test card
-            {" "}<span className="font-mono font-semibold">4242 4242 4242 4242</span>, any future expiry date, and any CVC.
-          </div>
-
           <button
             type="button"
-            disabled={isStarting}
-            onClick={startCheckout}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-700 px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-blue-800 disabled:cursor-wait disabled:opacity-60 sm:w-auto"
+            onClick={() => navigate("/checkout/success")}
+            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-700 px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-blue-800 sm:w-auto"
           >
-            <LockKeyhole size={16} />
-            {isStarting ? "Connecting to Stripe..." : "Continue to secure payment"}
-            {!isStarting && <ArrowRight size={16} />}
+            View demo confirmation
+            <ArrowRight size={16} />
           </button>
-
-          {errorMessage && (
-            <p role="alert" className="mt-4 rounded-lg bg-rose-50 px-4 py-3 text-sm text-rose-800">
-              {errorMessage}
-            </p>
-          )}
         </section>
 
         <aside className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-          <h2 className="text-lg font-bold text-slate-900">Order summary</h2>
+          <h2 className="text-lg font-bold text-slate-900">Cart summary</h2>
           <ul className="mt-4 divide-y divide-slate-100">
             {cart.map((item) => (
               <li key={item.id} className="flex items-center justify-between gap-3 py-3">
@@ -123,11 +79,11 @@ export default function CheckoutPage({ cart, subtotal }) {
               <span>Free</span>
             </div>
             <div className="mt-4 flex justify-between text-base font-bold text-slate-900">
-              <span>Total</span>
+              <span>Estimated total</span>
               <span>{formatPrice(subtotal)}</span>
             </div>
             <p className="mt-3 text-xs leading-5 text-slate-500">
-              Test checkout uses USD pricing. Applicable taxes are not configured for this demo.
+              Demo prices are shown in USD. No payment will be taken.
             </p>
           </div>
           <Link to="/cart" className="mt-5 inline-block text-sm font-semibold text-blue-700 hover:underline">

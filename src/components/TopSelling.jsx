@@ -6,8 +6,9 @@ export default function TopSelling() {
     <section className="relative flex min-h-67.5 items-center overflow-hidden bg-[#e9e2d4]">
 
       <img
-        src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1200&q=90"
+        src="/images/photo-1515886657613-9f3515b0c78f.webp"
         alt="Fashion collection"
+        loading="lazy"
         className="absolute inset-0 h-full w-full object-cover object-center"
       />
 

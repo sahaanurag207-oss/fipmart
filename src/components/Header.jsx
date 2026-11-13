@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import {
@@ -17,6 +17,11 @@ export default function Header({
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const mobileSearchInput = useRef(null);
+
+  useEffect(() => {
+    if (mobileSearchOpen) mobileSearchInput.current?.focus();
+  }, [mobileSearchOpen]);
 
   return (
     <header className="border-b border-slate-100 bg-white">
@@ -24,6 +29,7 @@ export default function Header({
       <div className="container-wide flex h-19 items-center gap-2 max-[360px]:gap-1 min-[400px]:gap-4 md:gap-5">
 
         <button
+          type="button"
           className="grid h-11 w-11 shrink-0 place-items-center rounded-lg text-slate-700 hover:bg-slate-100 max-[280px]:h-6 max-[280px]:w-6 md:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
@@ -50,6 +56,8 @@ export default function Header({
           <Search size={19} className="text-slate-500" />
 
           <input
+            type="search"
+            aria-label="Search products"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search for Products, Brand and More"
@@ -67,12 +75,14 @@ export default function Header({
         <div className="ml-auto flex items-center gap-2 text-slate-600 max-[360px]:gap-1 min-[400px]:gap-4">
 
           <button
+            type="button"
             className="grid h-11 w-11 shrink-0 place-items-center rounded-lg hover:bg-slate-100 max-[280px]:h-5.5 max-[280px]:w-5.5 md:hidden"
-            aria-label="Search"
+            aria-label={mobileSearchOpen ? "Close search" : "Open search"}
             aria-expanded={mobileSearchOpen}
+            aria-controls="mobile-search"
             onClick={() => setMobileSearchOpen((open) => !open)}
           >
-            <Search size={21} />
+            {mobileSearchOpen ? <X size={21} /> : <Search size={21} />}
           </button>
 
           <Link to="/offers" aria-label="Wishlist" className="hidden sm:block hover:text-blue-700">
@@ -98,16 +108,33 @@ export default function Header({
         </div>
       </div>
 
-      {mobileSearchOpen && (
-        <div className="container-wide pb-4 md:hidden">
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search products..."
-            className="w-full rounded-lg bg-slate-100 px-4 py-3 text-sm outline-none"
-          />
+      <div
+        id="mobile-search"
+        aria-hidden={!mobileSearchOpen}
+        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out md:hidden ${
+          mobileSearchOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        }`}
+      >
+        <div className="min-h-0 overflow-hidden">
+          <form
+            className="container-wide flex items-center gap-3 rounded-lg bg-slate-100 px-4 py-2.5"
+            onSubmit={(e) => e.preventDefault()}
+          >
+            <Search size={18} className="shrink-0 text-slate-500" />
+            <input
+              ref={mobileSearchInput}
+              type="search"
+              aria-label="Search products"
+              tabIndex={mobileSearchOpen ? 0 : -1}
+              disabled={!mobileSearchOpen}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search products..."
+              className="h-9 w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
+            />
+          </form>
         </div>
-      )}
+      </div>
 
       {mobileOpen && (
         <nav className="container-wide flex gap-5 border-t border-slate-100 py-4 text-sm font-semibold text-slate-600 md:hidden">

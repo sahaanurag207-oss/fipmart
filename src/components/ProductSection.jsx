@@ -1,4 +1,4 @@
-import { Heart, ShoppingCart } from "lucide-react";
+import { Check, Heart, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { MAX_CART_QUANTITY } from "../data";
 
@@ -52,11 +52,22 @@ function ProductCard({ product, quantity, onAdd }) {
         type="button"
         disabled={maxQuantityReached}
         onClick={() => onAdd(product)}
+        aria-label={`${maxQuantityReached ? "Maximum quantity reached for" : "Add"} ${product.name} to cart`}
         className="mt-3 flex min-h-11 items-center justify-center gap-2 rounded-md bg-slate-900 py-2 text-xs font-semibold text-white opacity-100 transition hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 disabled:cursor-not-allowed disabled:opacity-50 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
       >
         <ShoppingCart size={14} />
-        {maxQuantityReached ? "Maximum quantity reached" : "Add to cart"}
+        {maxQuantityReached ? "Maximum quantity reached" : quantity > 0 ? "Add another" : "Add to cart"}
       </button>
+
+      {quantity > 0 && (
+        <p
+          role="status"
+          className="mt-2 flex items-center justify-center gap-1 text-xs font-semibold text-emerald-700"
+        >
+          <Check size={14} aria-hidden="true" />
+          Added to cart · Qty {quantity}
+        </p>
+      )}
 
     </article>
   );

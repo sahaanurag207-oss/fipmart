@@ -216,10 +216,6 @@ export default function App() {
     [cart]
   );
 
-  const clearCartAfterPayment = useCallback(() => {
-    setCart([]);
-  }, []);
-
   return (
     <div className="min-h-screen bg-[#f2f3f5]">
       <Header
@@ -280,7 +276,7 @@ export default function App() {
 
         <Route
           path="/checkout/success"
-          element={<CheckoutResultPage onPaymentVerified={clearCartAfterPayment} />}
+          element={<CheckoutResultPage />}
         />
 
         <Route
